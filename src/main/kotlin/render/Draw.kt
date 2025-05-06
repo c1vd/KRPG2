@@ -34,14 +34,22 @@ class Draw(private val drawer: Drawer, private val world: World, private val cam
         )..<clamp((camera.y + renderDistance).toInt(), 0, worldSizeY - 1)
     }
 
-    fun drawWorld() {
-        for (x in getXRangeToRender()) {
-            for (y in getYRangeToRender()) {
+    private fun drawBackground(xRange: IntProgression, yRange: IntProgression) {}
+    private fun drawBlocks(xRange: IntProgression, yRange: IntProgression) {
+        for (x in xRange) {
+            for (y in yRange) {
                 val blockToRender = world.getBlock(x, y)
-                if (blockToRender != null){
+                if (blockToRender != null) {
                     drawBlock(blockToRender, x, y)
                 }
             }
         }
+    }
+
+    fun drawWorld() {
+        val xRange = getXRangeToRender()
+        val yRange = getYRangeToRender()
+        drawBackground(xRange, yRange)
+        drawBlocks(xRange, yRange)
     }
 }
