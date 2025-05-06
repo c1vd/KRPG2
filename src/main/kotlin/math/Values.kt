@@ -2,14 +2,14 @@ package math
 
 import kotlin.math.max
 
-/* константы, часть из которых планируется превратить в изменяемые(они указаны to var) */
+/* значения, нужные для работы программы */
 
 var blockSize = 32.0
     set(value){
         field = org.openrndr.math.clamp(value, 16.0, 48.0)
     }
-const val heightOfScreen = 1000 // to var
-const val widthOfScreen = 1200 // to var
+var heightOfScreen = 1000
+var widthOfScreen = 1200
 var blocksPerSemiHeight = heightOfScreen / (2 * blockSize)
 var blocksPerSemiWidth = widthOfScreen / (2 * blockSize)
 var worldSizeX = 100
