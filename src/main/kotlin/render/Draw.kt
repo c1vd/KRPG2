@@ -13,14 +13,34 @@ class Draw(private val drawer: Drawer, private val world: World, private val cam
     fun clearScreen(color: ColorRGBa = ColorRGBa.BLACK) {
         drawer.clear(color)
     }
-    private fun drawBlock(block: DefaultBlock?, x: Int, y: Int){
-        if (block != null)
-            drawer.image(block.texture, getCoordinatesOfBlockOnScreen(x, y, camera), blockSize, blockSize)
+
+    private fun drawBlock(block: DefaultBlock, x: Int, y: Int) {
+        drawer.image(block.texture, getCoordinatesOfBlockOnScreen(x, y, camera), blockSize, blockSize)
     }
-    fun drawWorld(){
-        for(x in clamp((camera.x - renderDistance).toInt(), 0, worldSizeX-1)..<clamp((camera.x + renderDistance).toInt(), 0, worldSizeX-1)){
-            for (y in clamp((camera.y - renderDistance).toInt(), 0, worldSizeY-1)..<clamp((camera.y + renderDistance).toInt(), 0, worldSizeY-1)){
-                drawBlock(world.getBlock(x, y), x, y)
+
+    private fun getXRangeToRender(): IntProgression {
+        return clamp(
+            (camera.x - renderDistance).toInt(),
+            0,
+            worldSizeX - 1
+        )..<clamp((camera.x + renderDistance).toInt(), 0, worldSizeX - 1)
+    }
+
+    private fun getYRangeToRender(): IntProgression {
+        return clamp(
+            (camera.y - renderDistance).toInt(),
+            0,
+            worldSizeY - 1
+        )..<clamp((camera.y + renderDistance).toInt(), 0, worldSizeY - 1)
+    }
+
+    fun drawWorld() {
+        for (x in getXRangeToRender()) {
+            for (y in getYRangeToRender()) {
+                val blockToRender = world.getBlock(x, y)
+                if (blockToRender != null){
+                    drawBlock(blockToRender, x, y)
+                }
             }
         }
     }

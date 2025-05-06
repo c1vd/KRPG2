@@ -12,6 +12,11 @@ class Camera(private var player: Player) {
         y += (player.y - y) // / 15
     }
 
+    /**
+     * метод, меняющий игрока, на которого нужно смотреть
+     *
+     * @param newPlayer игрок, за которым нужно следить
+     */
     fun changePlayer(newPlayer: Player) {
         player = newPlayer
     }
