@@ -1,7 +1,5 @@
 package entities
 
-import blocks.DefaultBlock
-import blocks.UnbreakableBlock
 import inventory.PlayerInventory
 import items.clothes.armor.Breastplate
 import items.Equipment
@@ -16,8 +14,6 @@ import org.openrndr.math.Vector2
 import world.World
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 /* класс игрока, не является зависимым от камеры */
 
@@ -32,6 +28,14 @@ class Player(
 
     /* методы класса Player, которые нужны для управления снаряжением игрока */
 
+
+    /**
+     * метод, с помощью которого можно надеть на игрока экипировку
+     *
+     * @param item предмет, который нужно надеть
+     *
+     * @return экипировка, на место которой надели новую, либо null, если ничего снимать не надо
+     */
     fun equip(item: Equipment): Equipment? {
         when (item) {
             is Helmet -> {
@@ -53,6 +57,7 @@ class Player(
         return null
     }
 
+    // методы, ответственные за снятие экипировки
     fun takeOffHelmet(): Helmet? {
         // данная реализация алгоритма снятия шлема была сделана с целью упрощения чтения кода
         // возвращается шлем, а потом у игрока он становится равным null
@@ -67,6 +72,7 @@ class Player(
         return leggings.also { leggings = null }
     }
 
+    // получение сумму защиты всей экипировки, надетой на игрока
     fun getSumOfProtection(): Double {
         return (helmet?.protection ?: 0.0) + (breastplate?.protection ?: 0.0) + (leggings?.protection ?: 0.0)
     }
@@ -93,28 +99,26 @@ class Player(
         inventory.add(item)
     }
 
-    fun destroy(block: DefaultBlock): Item? {
-        if (block is UnbreakableBlock) {
-            return null
-        }
-        return block.blockItem
+    fun throwItem(index: Int): Item? {
+        return inventory.get(index)
     }
 
     /* методы, отвечающие за движение */
 
     private fun checkPosition(position: Vector2): Boolean {
-        for (blockX in clamp((position.x - 2).toInt(), 0, worldSizeX - 1)..clamp(
+        val xRange = clamp((position.x - 2).toInt(), 0, worldSizeX - 1)..clamp(
             (position.x + 2).toInt(),
             0,
             worldSizeX - 1
-        )) {
-            for (blockY in clamp((position.y - 2).toInt(), 0, worldSizeY - 1)..clamp(
-                (position.y + 2).toInt(),
-                0,
-                worldSizeY - 1
-            )) {
-
-                if (world.blockList[blockY][blockX] != null) {
+        )
+        val yRange = clamp((position.y - 2).toInt(), 0, worldSizeY - 1)..clamp(
+            (position.y + 2).toInt(),
+            0,
+            worldSizeY - 1
+        )
+        for (blockX in xRange) {
+            for (blockY in yRange) {
+                if (world.getBlock(blockX, blockY) != null) {
                     val blockPosition = Vector2(blockX.toDouble(), blockY.toDouble())
                     if (inBlock(position, blockPosition)) {
                         return false
@@ -125,26 +129,14 @@ class Player(
         return true
     }
 
-    fun goTo(position: Vector2) {
+    private fun goTo(position: Vector2) {
         if (checkPosition(position)) {
             x = position.x
             y = position.y
         }
     }
-
-    fun right() {
-        goTo(Vector2(x + speed, y))
-    }
-
-    fun left() {
-        goTo(Vector2(x - speed, y))
-    }
-
-    fun up() {
-        goTo(Vector2(x, y - speed))
-    }
-
-    fun down() {
-        goTo(Vector2(x, y + speed))
+    fun go(position: Vector2, frametime: Double){
+        val div = position - Vector2(x, y)
+        goTo((div/div.length)*frametime*speed + Vector2(x, y))
     }
 }

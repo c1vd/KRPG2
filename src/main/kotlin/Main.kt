@@ -6,31 +6,44 @@ import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import world.World
 
+
+var frameTime: Double = 0.0
+
 fun main(){
     application {
         configure{
             width = widthOfScreen
             height = heightOfScreen
+            windowResizable = true
         }
         program {
+            var isMouseButtonPressed = false
             val defaultPlayerX = 0.0
             val defaultPlayerY = 0.0
 
             val world = World("world1.world")
-            val player = Player(defaultPlayerX, defaultPlayerY, 100.0, world)
+            val player = Player(defaultPlayerX, defaultPlayerY, 100.0, world, speed = 10.0)
             val camera = Camera(player)
             val renderer = Draw(drawer, world, camera)
 
             var begin = 0.0
-            var frameTime: Double
             mouse.buttonDown.listen {
-                player.goTo(getCoordinatesFromMousePixelPositionAndCamera(mouse.position, camera))
+                if(it.button == MouseButton.LEFT)
+                    isMouseButtonPressed = true
             }
+            mouse.buttonUp.listen {
+                if(it.button == MouseButton.LEFT)
+                    isMouseButtonPressed = false
+            }
+
             extend{
                 frameTime = seconds - begin
                 begin = seconds
 
+
                 updateValues()
+                widthOfScreen = width
+                heightOfScreen = height
                 // camera moving
                 camera.moveCamera()
 
@@ -43,7 +56,9 @@ fun main(){
 
                 drawer.circle(widthOfScreen/2.0, heightOfScreen/2.0, 2.0)
 
-                // TODO: make physics
+                if (isMouseButtonPressed){
+                    player.go(getCoordinatesFromMousePixelPositionAndCamera(mouse.position, camera), frameTime)
+                }
 
                 // render
                 renderer.drawWorld()

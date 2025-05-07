@@ -4,4 +4,4 @@ import org.openrndr.draw.ColorBuffer
 
 /* файл, содержащий предзагруженные текстуры для бэкграунда */
 
-val DirtBackgroundTexture: ColorBuffer = TODO()
+val DirtBackgroundTexture: ColorBuffer = TODO("Надо сделать текстуру")

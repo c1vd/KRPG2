@@ -2,7 +2,7 @@ package inventory
 
 import items.Item
 
-abstract class DefaultInventory {
+abstract class Inventory {
     abstract val items: Array<Item?>
 
     /* функции, отвечающие за добавление и получение предметов из инвентаря */

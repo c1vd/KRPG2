@@ -1,20 +1,18 @@
 package render
 
-import blocks.DefaultBlock
+import blocks.Block
 import camera.Camera
 import math.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.Drawer
 import world.World
-import kotlin.math.max
-import kotlin.math.min
 
 class Draw(private val drawer: Drawer, private val world: World, private val camera: Camera) {
     fun clearScreen(color: ColorRGBa = ColorRGBa.BLACK) {
         drawer.clear(color)
     }
 
-    private fun drawBlock(block: DefaultBlock, x: Int, y: Int) {
+    private fun drawBlock(block: Block, x: Int, y: Int) {
         drawer.image(block.texture, getCoordinatesOfBlockOnScreen(x, y, camera), blockSize, blockSize)
     }
 

@@ -1,18 +1,14 @@
 package world
 
-import blocks.DefaultBlock
-import blocks.breakable.Mud
-import blocks.unbreakable.Bedrock
-import math.blocksPerSemiHeight
+import blocks.Block
 import math.idToBlock
 import math.worldSizeX
 import math.worldSizeY
-import org.openrndr.shape.split
 import java.io.File
 
 class World(private val filename: String) {
-    var blockList: Array<Array<DefaultBlock?>> = Array(worldSizeY) { Array(worldSizeX) { null } }
-    fun getBlock(x: Int, y: Int): DefaultBlock? {
+    var blockList: Array<Array<Block?>> = Array(worldSizeY) { Array(worldSizeX) { null } }
+    fun getBlock(x: Int, y: Int): Block? {
         try {
             return blockList[y][x]
         } catch (e: Exception) {

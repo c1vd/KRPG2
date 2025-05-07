@@ -108,6 +108,7 @@ repositories {
     mavenLocal()
 }
 
+
 dependencies {
 
 //    implementation(libs.jsoup)
@@ -117,7 +118,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.slf4j.api)
     implementation(libs.kotlin.logging)
-
     when (applicationLogging) {
         Logging.NONE -> {
             runtimeOnly(libs.slf4j.nop)

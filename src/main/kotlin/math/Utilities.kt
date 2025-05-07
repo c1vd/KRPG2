@@ -1,10 +1,10 @@
 package math
 
-import blocks.DefaultBlock
-import blocks.breakable.Dirt
-import blocks.breakable.Mud
-import blocks.unbreakable.Bedrock
-import blocks.unbreakable.Unknown
+import blocks.Block
+import blocks.blocks.Dirt
+import blocks.blocks.Mud
+import blocks.blocks.Bedrock
+import blocks.blocks.Unknown
 import camera.Camera
 import org.openrndr.math.Vector2
 import java.security.SecureRandom
@@ -22,7 +22,7 @@ fun getCoordinatesOfBlockOnScreen(x: Int, y: Int, camera: Camera): Vector2 {
 
 fun clamp(n: Int, a: Int, b: Int): Int {
     if (a > b) {
-        throw Exception("it must be like a <= b")
+        return clamp(n, b, a)
     }
     return max(min(n, b), a)
 }
@@ -31,7 +31,7 @@ fun randomInteger(a: Int, b: Int): Int {
     return secureRandom.nextInt(b - a + 1) + a
 }
 
-fun idToBlock(id: Int): DefaultBlock? {
+fun idToBlock(id: Int): Block? {
     return when (id) {
         0 -> Unknown
         1 -> Dirt
