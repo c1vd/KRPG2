@@ -2,6 +2,8 @@ package extensions
 
 import math.blockSize
 import org.openrndr.math.Vector2
+import org.openrndr.panel.elements.round
+import kotlin.math.pow
 
 fun Vector2.toBlockVector2(): Vector2 {
     return this / blockSize
@@ -21,4 +23,8 @@ fun Vector2.yVector2(): Vector2{
 
 fun Vector2.unit(): Vector2{
     return this/length
+}
+
+fun Vector2.round(n: Int): Vector2{
+    return Vector2(x.round(n), y.round(n))
 }

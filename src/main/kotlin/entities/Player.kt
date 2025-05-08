@@ -1,5 +1,6 @@
 package entities
 
+import extensions.round
 import extensions.unit
 import extensions.xVector2
 import extensions.yVector2
@@ -105,6 +106,13 @@ class Player(
 
     /* методы, отвечающие за движение */
 
+    private fun isPlayerInBlock(position: Vector2, blockPosition: Vector2): Boolean {
+        return inBlock(position, blockPosition) ||
+                inBlock(position + size, blockPosition) ||
+                inBlock(position + size.xVector2(), blockPosition) ||
+                inBlock(position + size.yVector2(), blockPosition)
+    }
+
     private fun checkPosition(position: Vector2): Boolean {
         val xRange = clampProgression(position.x - 2, position.x + 2, 0, worldSizeX - 1)
         val yRange = clampProgression(position.y - 2, position.y + 2, 0, worldSizeY - 1)
@@ -112,11 +120,7 @@ class Player(
             for (blockY in yRange) {
                 if (world.getBlock(blockX, blockY) != null) {
                     val blockPosition = Vector2(blockX.toDouble(), blockY.toDouble())
-                    if (inBlock(position, blockPosition) ||
-                        inBlock(position + size, blockPosition) ||
-                        inBlock(position + size.xVector2(), blockPosition) ||
-                        inBlock(position + size.yVector2(), blockPosition)
-                    ) {
+                    if (isPlayerInBlock(position, blockPosition)) {
                         return false
                     }
                 }
@@ -131,8 +135,20 @@ class Player(
         }
     }
 
-    fun goInDirection(position: Vector2, frametime: Double) {
-        val div = position - this.position
-        goTo(div.unit() * frametime * speed + this.position)
+    private fun goInDirection(direction: Vector2, frametime: Double) {
+        goTo((direction.unit() * frametime * speed + this.position).round(1))
     }
+    fun right(frametime: Double){
+        goInDirection(Vector2(1.0, 0.0), frametime)
+    }
+    fun left(frametime: Double){
+        goInDirection(Vector2(-1.0, 0.0), frametime)
+    }
+    fun up(frametime: Double){
+        goInDirection(Vector2(0.0, -1.0), frametime)
+    }
+    fun down(frametime: Double){
+        goInDirection(Vector2(0.0, 1.0), frametime)
+    }
+
 }

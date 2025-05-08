@@ -48,7 +48,7 @@ fun idToBlock(id: Int): Block? {
  */
 fun inBlock(position: Vector2, blockPosition: Vector2): Boolean {
     val a = position - blockPosition
-    return a.x <= 1 && a.y <= 1 && a.x >= 0 && a.y >= 0
+    return a.x < 1 && a.y < 1 && a.x > 0 && a.y > 0
 }
 
 fun getGlobalCursorPosition(mousePositionInBlocks: Vector2, camera: Camera): Vector2 {

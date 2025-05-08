@@ -13,6 +13,10 @@ class Draw(private val drawer: Drawer, private val world: World, private val cam
         drawer.clear(color)
     }
 
+    fun setFillColor(color: ColorRGBa){
+        drawer.fill = color
+    }
+
     private fun drawBlock(block: Block, blockPosition: Vector2) {
         drawer.image(block.texture, getCoordinatesOfBlockOnScreen(blockPosition, camera), blockSize, blockSize)
     }
