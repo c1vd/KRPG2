@@ -13,11 +13,8 @@ import kotlin.math.min
 
 val secureRandom = SecureRandom()
 
-fun getCoordinatesOfBlockOnScreen(x: Int, y: Int, camera: Camera): Vector2 {
-    return (Vector2(x.toDouble(), y.toDouble()) - Vector2(
-        camera.x - blocksPerSemiWidth,
-        camera.y - blocksPerSemiHeight
-    )) * blockSize
+fun getCoordinatesOfBlockOnScreen(blockPosition: Vector2, camera: Camera): Vector2 {
+    return (blockPosition - camera.startScreenCoordinates()) * blockSize
 }
 
 fun clamp(n: Int, a: Int, b: Int): Int {
@@ -54,6 +51,16 @@ fun inBlock(position: Vector2, blockPosition: Vector2): Boolean {
     return a.x <= 1 && a.y <= 1 && a.x >= 0 && a.y >= 0
 }
 
-fun getCoordinatesFromMousePixelPositionAndCamera(mousePositionPixels: Vector2, camera: Camera): Vector2 {
-    return (mousePositionPixels / blockSize) + (Vector2(camera.x - blocksPerSemiWidth, camera.y - blocksPerSemiHeight))
+fun getGlobalCursorPosition(mousePositionInBlocks: Vector2, camera: Camera): Vector2 {
+    return mousePositionInBlocks + camera.startScreenCoordinates()
+}
+
+fun clampProgression(a: Number, b: Number, left: Int, right: Int): IntProgression{
+    if (a is Int && b is Int){
+        return clamp(a, left, right)..clamp(b, left, right)
+    }
+    if (a is Double && b is Double){
+        return clamp(a.toInt(), left, right)..clamp(b.toInt(), left, right)
+    }
+    throw Exception("a and b must be same type")
 }

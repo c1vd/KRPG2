@@ -1,15 +1,16 @@
 package camera
 
 import entities.Player
+import math.blocksPerSemiHeight
+import math.blocksPerSemiWidth
+import org.openrndr.math.Vector2
 
 class Camera(private var player: Player) {
-    var x: Double = player.x
-    var y: Double = player.y
+    var position: Vector2 = player.position
 
     // изменение координат камеры на более близкие к игроку
     fun moveCamera() {
-        x += (player.x - x) // / 15
-        y += (player.y - y) // / 15
+        position = player.position
     }
 
     /**
@@ -19,5 +20,9 @@ class Camera(private var player: Player) {
      */
     fun changePlayer(newPlayer: Player) {
         player = newPlayer
+    }
+
+    fun startScreenCoordinates(): Vector2{
+        return Vector2(position.x -  blocksPerSemiWidth, position.y - blocksPerSemiHeight)
     }
 }

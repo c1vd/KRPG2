@@ -1,16 +1,17 @@
 package entities
 
+import extensions.unit
+import extensions.xVector2
+import extensions.yVector2
 import inventory.PlayerInventory
 import items.clothes.armor.Breastplate
 import items.Equipment
 import items.Item
 import items.clothes.armor.Helmet
 import items.clothes.armor.Leggings
-import math.clamp
-import math.inBlock
-import math.worldSizeX
-import math.worldSizeY
+import math.*
 import org.openrndr.math.Vector2
+import org.openrndr.resourceText
 import world.World
 import kotlin.math.max
 import kotlin.math.min
@@ -18,7 +19,7 @@ import kotlin.math.min
 /* класс игрока, не является зависимым от камеры */
 
 class Player(
-    override var x: Double, override var y: Double, override var health: Double, private val world: World,
+    override var position: Vector2, override var health: Double, private val world: World, override val size: Vector2,
     override var maxHealth: Double = 100.0, var speed: Double = 0.1
 ) : Entity {
     var helmet: Helmet? = null
@@ -37,24 +38,23 @@ class Player(
      * @return экипировка, на место которой надели новую, либо null, если ничего снимать не надо
      */
     fun equip(item: Equipment): Equipment? {
-        when (item) {
+        return when (item) {
             is Helmet -> {
-                return helmet.also { helmet = item }
+                helmet.also { helmet = item }
             }
 
             is Breastplate -> {
-                return breastplate.also { breastplate = item }
+                breastplate.also { breastplate = item }
             }
 
             is Leggings -> {
-                return leggings.also { leggings = item }
+                leggings.also { leggings = item }
             }
 
             else -> {
-                println("SORRY")
+                null
             }
         }
-        return null
     }
 
     // методы, ответственные за снятие экипировки
@@ -106,21 +106,17 @@ class Player(
     /* методы, отвечающие за движение */
 
     private fun checkPosition(position: Vector2): Boolean {
-        val xRange = clamp((position.x - 2).toInt(), 0, worldSizeX - 1)..clamp(
-            (position.x + 2).toInt(),
-            0,
-            worldSizeX - 1
-        )
-        val yRange = clamp((position.y - 2).toInt(), 0, worldSizeY - 1)..clamp(
-            (position.y + 2).toInt(),
-            0,
-            worldSizeY - 1
-        )
+        val xRange = clampProgression(position.x - 2, position.x + 2, 0, worldSizeX - 1)
+        val yRange = clampProgression(position.y - 2, position.y + 2, 0, worldSizeY - 1)
         for (blockX in xRange) {
             for (blockY in yRange) {
                 if (world.getBlock(blockX, blockY) != null) {
                     val blockPosition = Vector2(blockX.toDouble(), blockY.toDouble())
-                    if (inBlock(position, blockPosition)) {
+                    if (inBlock(position, blockPosition) ||
+                        inBlock(position + size, blockPosition) ||
+                        inBlock(position + size.xVector2(), blockPosition) ||
+                        inBlock(position + size.yVector2(), blockPosition)
+                    ) {
                         return false
                     }
                 }
@@ -131,12 +127,12 @@ class Player(
 
     private fun goTo(position: Vector2) {
         if (checkPosition(position)) {
-            x = position.x
-            y = position.y
+            this.position = position
         }
     }
-    fun go(position: Vector2, frametime: Double){
-        val div = position - Vector2(x, y)
-        goTo((div/div.length)*frametime*speed + Vector2(x, y))
+
+    fun goInDirection(position: Vector2, frametime: Double) {
+        val div = position - this.position
+        goTo(div.unit() * frametime * speed + this.position)
     }
 }

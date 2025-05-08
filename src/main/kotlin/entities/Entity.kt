@@ -1,8 +1,10 @@
 package entities
 
+import org.openrndr.math.Vector2
+
 interface Entity{
-    var x: Double
-    var y: Double
+    var position: Vector2
     var health: Double
     var maxHealth: Double
+    val size: Vector2
 }
