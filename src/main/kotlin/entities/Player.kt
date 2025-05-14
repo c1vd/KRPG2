@@ -4,121 +4,37 @@ import extensions.round
 import extensions.unit
 import extensions.xVector2
 import extensions.yVector2
-import inventory.PlayerInventory
-import items.clothes.armor.Breastplate
-import items.Equipment
-import items.Item
-import items.clothes.armor.Helmet
-import items.clothes.armor.Leggings
-import math.*
+import math.clampProgression
+import math.inBlock
 import org.openrndr.math.Vector2
-import org.openrndr.resourceText
-import world.World
-import kotlin.math.max
-import kotlin.math.min
+import other.sceneHeight
+import other.sceneWidth
+import scene.Scene
 
-/* класс игрока, не является зависимым от камеры */
 
 class Player(
-    override var position: Vector2, override var health: Double, private val world: World, override val size: Vector2,
-    override var maxHealth: Double = 100.0, var speed: Double = 0.1
+    override var scene: Scene,
+    override var position: Vector2 = Vector2(0.0, 0.0),
+    override val sizeVector: Vector2 = Vector2(1.0, 1.0),
+    private var speed: Double = 5.0,
+    override val name: String = "Player"
 ) : Entity {
-    var helmet: Helmet? = null
-    var breastplate: Breastplate? = null
-    var leggings: Leggings? = null
-    val inventory: PlayerInventory = PlayerInventory()
-
-    /* методы класса Player, которые нужны для управления снаряжением игрока */
-
-
-    /**
-     * метод, с помощью которого можно надеть на игрока экипировку
-     *
-     * @param item предмет, который нужно надеть
-     *
-     * @return экипировка, на место которой надели новую, либо null, если ничего снимать не надо
-     */
-    fun equip(item: Equipment): Equipment? {
-        return when (item) {
-            is Helmet -> {
-                helmet.also { helmet = item }
-            }
-
-            is Breastplate -> {
-                breastplate.also { breastplate = item }
-            }
-
-            is Leggings -> {
-                leggings.also { leggings = item }
-            }
-
-            else -> {
-                null
-            }
-        }
-    }
-
-    // методы, ответственные за снятие экипировки
-    fun takeOffHelmet(): Helmet? {
-        // данная реализация алгоритма снятия шлема была сделана с целью упрощения чтения кода
-        // возвращается шлем, а потом у игрока он становится равным null
-        return helmet.also { helmet = null }
-    }
-
-    fun takeOffBreastplate(): Breastplate? {
-        return breastplate.also { breastplate = null }
-    }
-
-    fun takeOffLeggings(): Leggings? {
-        return leggings.also { leggings = null }
-    }
-
-    // получение сумму защиты всей экипировки, надетой на игрока
-    fun getSumOfProtection(): Double {
-        return (helmet?.protection ?: 0.0) + (breastplate?.protection ?: 0.0) + (leggings?.protection ?: 0.0)
-    }
-
-    /* методы класса Player, отвечающие за HP */
-
-    /**
-     * метод, который наносит урон игроку
-     *
-     * @param damage урон, который нужно нанести игроку
-     */
-    fun hit(damage: Double) {
-        // в случае атаки на игрока, игрок потеряет как минимум 1 hp
-        health -= max(damage - getSumOfProtection(), 1.0)
-    }
-
-    fun heal(healPoints: Double) {
-        health = min(health + healPoints, maxHealth)
-    }
-
-    /* методы класса Player, которые отвечают за управление инвентарём */
-
-    fun addItem(item: Item) {
-        inventory.add(item)
-    }
-
-    fun throwItem(index: Int): Item? {
-        return inventory.get(index)
-    }
 
     /* методы, отвечающие за движение */
 
     private fun isPlayerInBlock(position: Vector2, blockPosition: Vector2): Boolean {
         return inBlock(position, blockPosition) ||
-                inBlock(position + size, blockPosition) ||
-                inBlock(position + size.xVector2(), blockPosition) ||
-                inBlock(position + size.yVector2(), blockPosition)
+                inBlock(position + sizeVector, blockPosition) ||
+                inBlock(position + sizeVector.xVector2(), blockPosition) ||
+                inBlock(position + sizeVector.yVector2(), blockPosition)
     }
 
     private fun checkPosition(position: Vector2): Boolean {
-        val xRange = clampProgression(position.x - 2, position.x + 2, 0, worldSizeX - 1)
-        val yRange = clampProgression(position.y - 2, position.y + 2, 0, worldSizeY - 1)
+        val xRange = clampProgression(position.x - 2, position.x + 2, 0, sceneWidth - 1)
+        val yRange = clampProgression(position.y - 2, position.y + 2, 0, sceneHeight - 1)
         for (blockX in xRange) {
             for (blockY in yRange) {
-                if (world.getBlock(blockX, blockY) != null) {
+                if (scene.getBlock(blockX, blockY) != null) {
                     val blockPosition = Vector2(blockX.toDouble(), blockY.toDouble())
                     if (isPlayerInBlock(position, blockPosition)) {
                         return false
@@ -138,16 +54,20 @@ class Player(
     private fun goInDirection(direction: Vector2, frametime: Double) {
         goTo((direction.unit() * frametime * speed + this.position).round(1))
     }
-    fun right(frametime: Double){
+
+    fun right(frametime: Double) {
         goInDirection(Vector2(1.0, 0.0), frametime)
     }
-    fun left(frametime: Double){
+
+    fun left(frametime: Double) {
         goInDirection(Vector2(-1.0, 0.0), frametime)
     }
-    fun up(frametime: Double){
+
+    fun up(frametime: Double) {
         goInDirection(Vector2(0.0, -1.0), frametime)
     }
-    fun down(frametime: Double){
+
+    fun down(frametime: Double) {
         goInDirection(Vector2(0.0, 1.0), frametime)
     }
 

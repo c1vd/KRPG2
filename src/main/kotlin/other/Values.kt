@@ -1,4 +1,4 @@
-package math
+package other
 
 import kotlin.math.max
 
@@ -12,8 +12,6 @@ var heightOfScreen = 1000
 var widthOfScreen = 1200
 var blocksPerSemiHeight = heightOfScreen / (2 * blockSize)
 var blocksPerSemiWidth = widthOfScreen / (2 * blockSize)
-var worldSizeX = 100
-var worldSizeY = 100
 var renderDistance = max(blocksPerSemiWidth, blocksPerSemiHeight) + 1
 
 fun updateValues(){

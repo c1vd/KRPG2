@@ -1,13 +1,14 @@
 package inventory
 
-import items.Item
+import items.Food
+import math.checkIndex
 
 abstract class Inventory {
-    abstract val items: Array<Item?>
+    protected abstract val items: Array<Food?>
 
     /* функции, отвечающие за добавление и получение предметов из инвентаря */
 
-    fun add(item: Item): Boolean {
+    fun add(item: Food): Boolean {
         if (!items.contains(null)) {
             return false
         }
@@ -15,13 +16,19 @@ abstract class Inventory {
         return true
     }
 
-    fun get(index: Int): Item? {
-        return try {
-            items[index].also {
-                items[index] = null
-            }
-        } catch (e: Exception) {
-            null
+    fun get(index: Int): Food? {
+        if(!checkIndex(index, items.size)){
+            return null
         }
+        return items[index].also {
+            items[index] = null
+        }
+    }
+
+    fun at(index: Int): Food? {
+        if(!checkIndex(index, items.size)){
+            return null
+        }
+        return items[index]
     }
 }

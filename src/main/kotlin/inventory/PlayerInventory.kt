@@ -1,7 +1,7 @@
 package inventory
 
-import items.Item
+import items.Food
 
 class PlayerInventory : Inventory() {
-    override val items: Array<Item?> = Array(10){null}
+    override val items: Array<Food?> = Array(10){null}
 }

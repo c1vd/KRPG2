@@ -1,47 +1,74 @@
 package render
 
+import background.Background
 import blocks.Block
 import camera.Camera
-import math.*
+import math.clampProgression
+import math.getCoordinatesOnScreen
+import message.Message
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.Drawer
 import org.openrndr.math.Vector2
-import world.World
+import other.blockSize
+import other.renderDistance
+import scene.BossfightScene
+import scene.DefaultScene
+import scene.Scene
 
-class Draw(private val drawer: Drawer, private val world: World, private val camera: Camera) {
+class Draw(private val drawer: Drawer, private val camera: Camera) {
     fun clearScreen(color: ColorRGBa = ColorRGBa.BLACK) {
         drawer.clear(color)
     }
 
-    fun setFillColor(color: ColorRGBa){
+    fun setFillColor(color: ColorRGBa) {
         drawer.fill = color
     }
 
+    fun showMessage(message: Message) {
+        drawer.text("${message.speaker.name}: ${message.text}", Vector2(10.0, 10.0))
+    }
+
     private fun drawBlock(block: Block, blockPosition: Vector2) {
-        drawer.image(block.texture, getCoordinatesOfBlockOnScreen(blockPosition, camera), blockSize, blockSize)
+        drawer.image(block.texture, getCoordinatesOnScreen(blockPosition, camera), blockSize, blockSize)
     }
 
-    private fun getXRangeToRender(): IntProgression {
-        return clamp(
-            (camera.position.x - renderDistance).toInt(),
+    private fun drawBackground(background: Background, backgroundPosition: Vector2) {
+        drawer.image(background.texture, getCoordinatesOnScreen(backgroundPosition, camera), blockSize, blockSize)
+    }
+
+    private fun getXRangeToRender(scene: Scene): IntProgression {
+        return clampProgression(
+            camera.position.x - renderDistance,
+            camera.position.x + renderDistance,
             0,
-            worldSizeX - 1
-        )..<clamp((camera.position.x + renderDistance).toInt(), 0, worldSizeX - 1)
+            scene.sceneWidth - 1
+        )
     }
 
-    private fun getYRangeToRender(): IntProgression {
-        return clamp(
-            (camera.position.y - renderDistance).toInt(),
+    private fun getYRangeToRender(scene: Scene): IntProgression {
+        return clampProgression(
+            camera.position.y - renderDistance,
+            camera.position.y + renderDistance,
             0,
-            worldSizeY - 1
-        )..<clamp((camera.position.y + renderDistance).toInt(), 0, worldSizeY - 1)
+            scene.sceneHeight - 1
+        )
     }
 
-    private fun drawBackground(xRange: IntProgression, yRange: IntProgression) {}
-    private fun drawBlocks(xRange: IntProgression, yRange: IntProgression) {
+    private fun drawBackgrounds(xRange: IntProgression, yRange: IntProgression, scene: Scene) {
         for (x in xRange) {
             for (y in yRange) {
-                val blockToRender = world.getBlock(x, y)
+                val backgroundToRender = scene.getBackground(x, y)
+                if (backgroundToRender != null) {
+                    drawBackground(backgroundToRender, Vector2(x.toDouble(), y.toDouble()))
+                }
+            }
+        }
+    }
+
+    private fun drawBlocks(xRange: IntProgression, yRange: IntProgression, scene: Scene) {
+        for (x in xRange) {
+            for (y in yRange) {
+                val blockToRender = scene.getBlock(x, y)
                 if (blockToRender != null) {
                     drawBlock(blockToRender, Vector2(x.toDouble(), y.toDouble()))
                 }
@@ -49,10 +76,16 @@ class Draw(private val drawer: Drawer, private val world: World, private val cam
         }
     }
 
-    fun drawWorld() {
-        val xRange = getXRangeToRender()
-        val yRange = getYRangeToRender()
-        drawBackground(xRange, yRange)
-        drawBlocks(xRange, yRange)
+    fun drawScene(scene: DefaultScene) {
+        when (scene) {
+            is Scene -> {
+                val xRange = getXRangeToRender(scene)
+                val yRange = getYRangeToRender(scene)
+                drawBackgrounds(xRange, yRange, scene)
+                drawBlocks(xRange, yRange, scene)
+            }
+
+            is BossfightScene -> {}
+        }
     }
 }

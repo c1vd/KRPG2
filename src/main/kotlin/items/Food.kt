@@ -4,6 +4,7 @@ import org.openrndr.draw.ColorBuffer
 
 
 // interface for all the items that can be in inventory
-interface Item{
+interface Food{
+    val healthRestoration: Double
     val texture: ColorBuffer
 }

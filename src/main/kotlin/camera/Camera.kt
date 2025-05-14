@@ -1,8 +1,8 @@
 package camera
 
 import entities.Player
-import math.blocksPerSemiHeight
-import math.blocksPerSemiWidth
+import other.blocksPerSemiHeight
+import other.blocksPerSemiWidth
 import org.openrndr.math.Vector2
 
 class Camera(private var player: Player) {

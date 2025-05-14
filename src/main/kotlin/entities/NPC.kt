@@ -1,6 +1,8 @@
 package entities
 
+import org.openrndr.draw.ColorBuffer
+
 abstract class NPC : Entity {
-    abstract val name: String
+    abstract val texture: ColorBuffer
     abstract fun interact()
 }

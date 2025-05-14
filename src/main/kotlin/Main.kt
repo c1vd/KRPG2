@@ -1,12 +1,14 @@
 import camera.Camera
-import render.Draw
 import entities.Player
-import extensions.toBlockVector2
-import math.*
+import render.Draw
+import message.Message
 import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
-import world.World
+import other.heightOfScreen
+import other.updateValues
+import other.widthOfScreen
+import scene.Scene
 
 
 var frameTime: Double = 0.0
@@ -28,40 +30,48 @@ fun main() {
             val defaultPlayerX = 0.0
             val defaultPlayerY = 0.0
 
-            val world = World("world1.world")
-            val player = Player(Vector2(defaultPlayerX, defaultPlayerY), 100.0, world, Vector2(0.5, 0.5), speed = 5.0)
+            val scene = Scene()
+            val player = Player(scene, Vector2(defaultPlayerX, defaultPlayerY), Vector2(0.5, 0.5), speed = 5.0)
             val camera = Camera(player)
-            val renderer = Draw(drawer, world, camera)
+            val renderer = Draw(drawer, camera)
 
             var begin = 0.0
             keyboard.keyDown.listen {
-                if(it.key == KEY_ARROW_RIGHT){
+                if (it.key == KEY_ARROW_RIGHT) {
                     right = true
                 }
-                if(it.key == KEY_ARROW_LEFT){
+                if (it.key == KEY_ARROW_LEFT) {
                     left = true
                 }
-                if(it.key == KEY_ARROW_UP){
+                if (it.key == KEY_ARROW_UP) {
                     up = true
                 }
-                if(it.key == KEY_ARROW_DOWN){
+                if (it.key == KEY_ARROW_DOWN) {
                     down = true
                 }
             }
             keyboard.keyUp.listen {
-                if(it.key == KEY_ARROW_RIGHT){
+                if (it.key == KEY_ARROW_RIGHT) {
                     right = false
                 }
-                if(it.key == KEY_ARROW_LEFT){
+                if (it.key == KEY_ARROW_LEFT) {
                     left = false
                 }
-                if(it.key == KEY_ARROW_UP){
+                if (it.key == KEY_ARROW_UP) {
                     up = false
                 }
-                if(it.key == KEY_ARROW_DOWN){
+                if (it.key == KEY_ARROW_DOWN) {
                     down = false
                 }
             }
+            mouse.buttonDown.listen {
+                if (it.button == MouseButton.LEFT) {
+                    scene.deleteCurrentMessage()
+                }
+            }
+            scene.addMessage(Message("Hello World", player))
+            scene.addMessage(Message("Message2", player))
+
 
             extend {
                 frameTime = seconds - begin
@@ -82,28 +92,32 @@ fun main() {
                 drawer.text(
                     "FrameTime: ${
                         (frameTime * 10000).toInt().toDouble() / 10
-                    } ms; FPS: ${(1 / frameTime).toInt()}; Player X: ${player.position.x}; Player Y: ${player.position.y}", 10.0, 20.0
+                    } ms; FPS: ${(1 / frameTime).toInt()}; Player X: ${player.position.x}; Player Y: ${player.position.y}",
+                    10.0,
+                    20.0
                 )
 
                 drawer.rectangle(Vector2(widthOfScreen / 2.0, heightOfScreen / 2.0), 16.0, 16.0)
 
-                if (right){
+                if (right) {
                     player.right(frameTime)
                 }
-                if (left){
+                if (left) {
                     player.left(frameTime)
                 }
-                if(up){
+                if (up) {
                     player.up(frameTime)
                 }
-                if(down){
+                if (down) {
                     player.down(frameTime)
                 }
 
+                if (!scene.areMessagesEmpty())
+                    renderer.showMessage(scene.getCurrentMessage())
                 // render
-                renderer.drawWorld()
+                renderer.drawScene(player.scene)
             }
-            world.save()
+            scene.save()
         }
     }
 }

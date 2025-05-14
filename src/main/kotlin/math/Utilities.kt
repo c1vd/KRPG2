@@ -7,14 +7,15 @@ import blocks.blocks.Bedrock
 import blocks.blocks.Unknown
 import camera.Camera
 import org.openrndr.math.Vector2
+import other.blockSize
 import java.security.SecureRandom
 import kotlin.math.max
 import kotlin.math.min
 
 val secureRandom = SecureRandom()
 
-fun getCoordinatesOfBlockOnScreen(blockPosition: Vector2, camera: Camera): Vector2 {
-    return (blockPosition - camera.startScreenCoordinates()) * blockSize
+fun getCoordinatesOnScreen(position: Vector2, camera: Camera): Vector2 {
+    return (position - camera.startScreenCoordinates()) * blockSize
 }
 
 fun clamp(n: Int, a: Int, b: Int): Int {
@@ -26,6 +27,10 @@ fun clamp(n: Int, a: Int, b: Int): Int {
 
 fun randomInteger(a: Int, b: Int): Int {
     return secureRandom.nextInt(b - a + 1) + a
+}
+
+fun checkIndex(index: Int, arraySize: Int): Boolean{
+    return index in 0..<arraySize
 }
 
 fun idToBlock(id: Int): Block? {
