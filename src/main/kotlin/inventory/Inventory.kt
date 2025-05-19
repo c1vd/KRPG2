@@ -1,7 +1,7 @@
 package inventory
 
 import items.Food
-import math.checkIndex
+import other.checkIndex
 
 abstract class Inventory {
     protected abstract val items: Array<Food?>

@@ -3,8 +3,8 @@ package render
 import background.Background
 import blocks.Block
 import camera.Camera
-import math.clampProgression
-import math.getCoordinatesOnScreen
+import other.clampProgression
+import other.getCoordinatesOnScreen
 import message.Message
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.Drawer

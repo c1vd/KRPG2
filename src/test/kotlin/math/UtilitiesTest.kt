@@ -1,6 +1,7 @@
 package math
 
 import org.junit.Test
+import other.clamp
 import kotlin.test.assertEquals
 
 class UtilitiesTest {
