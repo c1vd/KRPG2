@@ -4,11 +4,9 @@ import extensions.round
 import extensions.unit
 import extensions.xVector2
 import extensions.yVector2
-import math.clampProgression
-import math.inBlock
+import other.clampProgression
+import other.inBlock
 import org.openrndr.math.Vector2
-import other.sceneHeight
-import other.sceneWidth
 import scene.Scene
 
 
@@ -30,8 +28,8 @@ class Player(
     }
 
     private fun checkPosition(position: Vector2): Boolean {
-        val xRange = clampProgression(position.x - 2, position.x + 2, 0, sceneWidth - 1)
-        val yRange = clampProgression(position.y - 2, position.y + 2, 0, sceneHeight - 1)
+        val xRange = clampProgression(position.x - 2, position.x + 2, 0, scene.sceneWidth - 1)
+        val yRange = clampProgression(position.y - 2, position.y + 2, 0, scene.sceneHeight - 1)
         for (blockX in xRange) {
             for (blockY in yRange) {
                 if (scene.getBlock(blockX, blockY) != null) {
@@ -45,30 +43,33 @@ class Player(
         return true
     }
 
-    private fun goTo(position: Vector2) {
+    private fun goTo(position: Vector2): Boolean {
         if (checkPosition(position)) {
             this.position = position
+            return true
         }
+        return false
     }
 
-    private fun goInDirection(direction: Vector2, frametime: Double) {
-        goTo((direction.unit() * frametime * speed + this.position).round(1))
+    private fun goInDirection(direction: Vector2, frameTime: Double) {
+        goTo((direction.unit() * frameTime * speed + this.position).round(1))
+
     }
 
-    fun right(frametime: Double) {
-        goInDirection(Vector2(1.0, 0.0), frametime)
+    fun right(frameTime: Double) {
+        goInDirection(Vector2(1.0, 0.0), frameTime)
     }
 
-    fun left(frametime: Double) {
-        goInDirection(Vector2(-1.0, 0.0), frametime)
+    fun left(frameTime: Double) {
+        goInDirection(Vector2(-1.0, 0.0), frameTime)
     }
 
-    fun up(frametime: Double) {
-        goInDirection(Vector2(0.0, -1.0), frametime)
+    fun up(frameTime: Double) {
+        goInDirection(Vector2(0.0, -1.0), frameTime)
     }
 
-    fun down(frametime: Double) {
-        goInDirection(Vector2(0.0, 1.0), frametime)
+    fun down(frameTime: Double) {
+        goInDirection(Vector2(0.0, 1.0), frameTime)
     }
 
 }

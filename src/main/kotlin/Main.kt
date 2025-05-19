@@ -5,10 +5,12 @@ import message.Message
 import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
-import other.heightOfScreen
+import other.MessageColors
+
 import other.updateValues
-import other.widthOfScreen
+
 import scene.Scene
+import scene.scenes.BeginningScene
 
 
 var frameTime: Double = 0.0
@@ -17,11 +19,13 @@ var frameTime: Double = 0.0
 fun main() {
     application {
         configure {
-            width = widthOfScreen
-            height = heightOfScreen
+            width = 1280
+            height = 720
+
             windowResizable = true
         }
         program {
+            println(MessageColors.INFO + "INFO MESSAGE")
             var right = false
             var left = false
             var up = false
@@ -30,7 +34,7 @@ fun main() {
             val defaultPlayerX = 0.0
             val defaultPlayerY = 0.0
 
-            val scene = Scene()
+            val scene = BeginningScene
             val player = Player(scene, Vector2(defaultPlayerX, defaultPlayerY), Vector2(0.5, 0.5), speed = 5.0)
             val camera = Camera(player)
             val renderer = Draw(drawer, camera)
@@ -77,10 +81,7 @@ fun main() {
                 frameTime = seconds - begin
                 begin = seconds
 
-                widthOfScreen = width
-                heightOfScreen = height
-
-                updateValues()
+                updateValues(width, height)
                 // camera moving
                 camera.moveCamera()
 
@@ -97,7 +98,7 @@ fun main() {
                     20.0
                 )
 
-                drawer.rectangle(Vector2(widthOfScreen / 2.0, heightOfScreen / 2.0), 16.0, 16.0)
+                drawer.rectangle(Vector2(width / 2.0, height / 2.0), 16.0, 16.0)
 
                 if (right) {
                     player.right(frameTime)

@@ -3,15 +3,16 @@ package scene
 import background.Background
 import blocks.Block
 import blocks.blocks.Unknown
-import entities.ErrorReporter
 import entities.NPC
-import math.idToBlock
+import extensions.toIntArray
+import other.idToBlock
 import message.Message
 import org.openrndr.collections.push
 import other.Constants
+import other.MessageColors
 import java.io.File
 
-abstract class Scene(private val filename: String = "defaultScene.scene") : DefaultScene() {
+abstract class Scene(private val filename: String) : DefaultScene() {
     val sceneWidth: Int
     val sceneHeight: Int
     private val blockList: Array<Array<Block?>>
@@ -24,12 +25,7 @@ abstract class Scene(private val filename: String = "defaultScene.scene") : Defa
     }
 
     fun getCurrentMessage(): Message {
-        if (areMessagesEmpty()) {
-            return Message("Error Message", ErrorReporter)
-
-        }
-        return messages.elementAt(0)
-
+        return messages.firstOrNull() ?: Message("There are not messages")
     }
 
     fun deleteCurrentMessage() {
@@ -43,7 +39,7 @@ abstract class Scene(private val filename: String = "defaultScene.scene") : Defa
     fun getBlock(x: Int, y: Int): Block? {
         return try {
             blockList[y][x]
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }
@@ -78,6 +74,7 @@ abstract class Scene(private val filename: String = "defaultScene.scene") : Defa
 
     fun save() {
         val file = openSceneFile()
+
         file.writeText("$sceneWidth $sceneHeight\n")
         for (x in 0..<sceneWidth) {
             for (y in 0..<sceneHeight) {
@@ -90,34 +87,30 @@ abstract class Scene(private val filename: String = "defaultScene.scene") : Defa
     }
 
     init {
-        val file: File
-        try {
-            file = openSceneFile()
-        } catch (_: Exception) {
-            throw Exception("ERROR: No file or directory")
+        var file: File = openSceneFile()
+        if (!file.exists()) {
+            throw Exception(MessageColors.ERROR + "ERROR: No File or Directory")
         }
+
         try {
             val lines = file.readLines()
-            val (sceneX, sceneY) = lines[0].split(' ').map { it.toInt() }
+            val (sceneX, sceneY) = lines.first().split(' ').toIntArray()
             sceneWidth = sceneX
             sceneHeight = sceneY
             blockList = Array(sceneHeight) { Array(sceneWidth) { null } }
             backgroundList = Array(sceneHeight) { Array(sceneWidth) { null } }
             for (line in lines.drop(1)) {
                 try {
-                    val (blockId, x, y) = line.split(' ').map { it.toInt() }
+                    val (blockId, x, y) = line.split(' ').toIntArray()
                     val blockToAdd = idToBlock(blockId)
-                    if (blockToAdd != null)
-                        setBlock(blockToAdd, x, y)
-                    else {
-                        setBlock(Unknown, x, y)
-                    }
+
+                    setBlock(blockToAdd ?: Unknown, x, y)
                 } catch (_: Exception) {
-                    println("WARNING")
+                    println("WARNING: Wrong Block")
                 }
 
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             throw Exception("ERROR: Wrong Format")
         }
 

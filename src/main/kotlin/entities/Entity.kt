@@ -8,4 +8,7 @@ interface Entity{
     val name: String
     var position: Vector2
     val sizeVector: Vector2
+    fun changeScene(newScene: Scene){
+        scene = newScene
+    }
 }
