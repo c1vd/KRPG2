@@ -7,6 +7,7 @@ import entities.NPC
 import extensions.toIntArray
 import other.idToBlock
 import message.Message
+import message.MessageController
 import org.openrndr.collections.push
 import other.Constants
 import other.MessageColors
@@ -15,33 +16,13 @@ import java.io.File
 abstract class Scene(private val filename: String) : DefaultScene() {
     val sceneWidth: Int
     val sceneHeight: Int
-    private val blockList: Array<Array<Block?>>
-    private val backgroundList: Array<Array<Background?>>
+    private val blocks: BlockMatrix
+    private val backgrounds: BackgroundMatrix
     private val nonPlayableCharacters = mutableListOf<NPC>()
-    private val messages: ArrayDeque<Message> = ArrayDeque()
-
-    fun areMessagesEmpty(): Boolean {
-        return messages.isEmpty()
-    }
-
-    fun getCurrentMessage(): Message {
-        return messages.firstOrNull() ?: Message("There are not messages")
-    }
-
-    fun deleteCurrentMessage() {
-        messages.removeFirstOrNull()
-    }
-
-    fun addMessage(message: Message) {
-        messages.push(message)
-    }
+    val messageController = MessageController()
 
     fun getBlock(x: Int, y: Int): Block? {
-        return try {
-            blockList[y][x]
-        } catch (_: Exception) {
-            null
-        }
+        return blocks.get(x, y)
     }
 
     fun doesBlockExist(x: Int, y: Int): Boolean{
@@ -49,27 +30,15 @@ abstract class Scene(private val filename: String) : DefaultScene() {
     }
 
     private fun setBlock(block: Block, x: Int, y: Int) {
-        try {
-            blockList[y][x] = block
-        } catch (_: Exception) {
-            throw Exception("ERROR: Invalid Index")
-        }
+        blocks.set(block, x, y)
     }
 
     fun getBackground(x: Int, y: Int): Background? {
-        return try {
-            backgroundList[y][x]
-        } catch (_: Exception) {
-            null
-        }
+        return backgrounds.get(x, y)
     }
 
     private fun setBackground(background: Background, x: Int, y: Int) {
-        try {
-            backgroundList[y][x] = background
-        } catch (_: Exception) {
-            throw Exception("ERROR: Invalid Index")
-        }
+        backgrounds.set(background, x, y)
     }
 
     private fun openSceneFile(): File {
@@ -83,9 +52,7 @@ abstract class Scene(private val filename: String) : DefaultScene() {
         for (x in 0..<sceneWidth) {
             for (y in 0..<sceneHeight) {
                 val block = getBlock(x, y)
-                if (block != null) {
-                    file.appendText("${block.id} $x $y\n")
-                }
+                file.appendText("${block?.id ?: continue} $x $y\n")
             }
         }
     }
@@ -101,8 +68,8 @@ abstract class Scene(private val filename: String) : DefaultScene() {
             val (sceneX, sceneY) = lines.first().split(' ').toIntArray()
             sceneWidth = sceneX
             sceneHeight = sceneY
-            blockList = Array(sceneHeight) { Array(sceneWidth) { null } }
-            backgroundList = Array(sceneHeight) { Array(sceneWidth) { null } }
+            blocks = BlockMatrix(sceneWidth, sceneHeight)
+            backgrounds = BackgroundMatrix(sceneWidth, sceneHeight)
             for (line in lines.drop(1)) {
                 try {
                     val (blockId, x, y) = line.split(' ').toIntArray()

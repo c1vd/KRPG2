@@ -67,11 +67,11 @@ fun main() {
 
             mouse.buttonDown.listen {
                 if (it.button == MouseButton.LEFT) {
-                    scene.deleteCurrentMessage()
+                    scene.messageController.popMessage()
                 }
             }
-            scene.addMessage(Message("Hello World", player))
-            scene.addMessage(Message("Message2", player))
+            scene.messageController.addMessage(Message("Hello World", player))
+            scene.messageController.addMessage(Message("Message2", player))
 
 
             extend {
@@ -112,8 +112,8 @@ fun main() {
                     player.goInDirection(Directions.DOWN, frameTime)
 
 
-                if (!scene.areMessagesEmpty())
-                    renderer.showMessage(scene.getCurrentMessage())
+                if (!scene.messageController.areMessagesEmpty())
+                    renderer.showMessage(scene.messageController.getCurrentMessage())
 
                 // render
                 renderer.drawScene(player.scene)
