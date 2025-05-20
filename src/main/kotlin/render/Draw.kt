@@ -58,9 +58,7 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
         for (x in xRange) {
             for (y in yRange) {
                 val backgroundToRender = scene.getBackground(x, y)
-                if (backgroundToRender != null) {
-                    drawBackground(backgroundToRender, Vector2(x.toDouble(), y.toDouble()))
-                }
+                drawBackground(backgroundToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
             }
         }
     }

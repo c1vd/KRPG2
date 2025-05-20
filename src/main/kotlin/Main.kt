@@ -1,12 +1,13 @@
 import camera.Camera
 import entities.Player
+import extensions.setKeyDown
+import extensions.setKeyUp
 import render.Draw
 import message.Message
 import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
 import other.Directions
-import other.MessageColors
 
 import other.updateValues
 import scene.scenes.BeginningScene
@@ -24,7 +25,6 @@ fun main() {
             windowResizable = true
         }
         program {
-            println(MessageColors.INFO + "INFO MESSAGE")
             var right = false
             var left = false
             var up = false
@@ -39,34 +39,32 @@ fun main() {
             val renderer = Draw(drawer, camera)
 
             var begin = 0.0
-            keyboard.keyDown.listen {
-                if (it.key == KEY_ARROW_RIGHT) {
-                    right = true
-                }
-                if (it.key == KEY_ARROW_LEFT) {
-                    left = true
-                }
-                if (it.key == KEY_ARROW_UP) {
-                    up = true
-                }
-                if (it.key == KEY_ARROW_DOWN) {
-                    down = true
-                }
+            keyboard.setKeyDown(KEY_ARROW_RIGHT) {
+                right = true
             }
-            keyboard.keyUp.listen {
-                if (it.key == KEY_ARROW_RIGHT) {
-                    right = false
-                }
-                if (it.key == KEY_ARROW_LEFT) {
-                    left = false
-                }
-                if (it.key == KEY_ARROW_UP) {
-                    up = false
-                }
-                if (it.key == KEY_ARROW_DOWN) {
-                    down = false
-                }
+            keyboard.setKeyDown(KEY_ARROW_LEFT){
+                left = true
             }
+            keyboard.setKeyDown(KEY_ARROW_UP){
+                up = true
+            }
+            keyboard.setKeyDown(KEY_ARROW_DOWN){
+                down = true
+            }
+
+            keyboard.setKeyUp(KEY_ARROW_RIGHT){
+                right = false
+            }
+            keyboard.setKeyUp(KEY_ARROW_LEFT){
+                left = false
+            }
+            keyboard.setKeyUp(KEY_ARROW_UP){
+                up = false
+            }
+            keyboard.setKeyUp(KEY_ARROW_DOWN){
+                down = false
+            }
+
             mouse.buttonDown.listen {
                 if (it.button == MouseButton.LEFT) {
                     scene.deleteCurrentMessage()
@@ -89,6 +87,8 @@ fun main() {
 
                 // FPS and FrameTime
                 renderer.setFillColor(ColorRGBa.WHITE)
+
+
                 drawer.text(
                     "FrameTime: ${
                         (frameTime * 10000).toInt().toDouble() / 10
@@ -99,21 +99,22 @@ fun main() {
 
                 drawer.rectangle(Vector2(width / 2.0, height / 2.0), 16.0, 16.0)
 
-                if (right) {
+                if (right)
                     player.goInDirection(Directions.RIGHT, frameTime)
-                }
-                if (left) {
+
+                if (left)
                     player.goInDirection(Directions.LEFT, frameTime)
-                }
-                if (up) {
+
+                if (up)
                     player.goInDirection(Directions.UP, frameTime)
-                }
-                if (down) {
+
+                if (down)
                     player.goInDirection(Directions.DOWN, frameTime)
-                }
+
 
                 if (!scene.areMessagesEmpty())
                     renderer.showMessage(scene.getCurrentMessage())
+
                 // render
                 renderer.drawScene(player.scene)
             }

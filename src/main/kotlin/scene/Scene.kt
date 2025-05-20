@@ -44,6 +44,10 @@ abstract class Scene(private val filename: String) : DefaultScene() {
         }
     }
 
+    fun doesBlockExist(x: Int, y: Int): Boolean{
+        return getBlock(x, y) != null
+    }
+
     private fun setBlock(block: Block, x: Int, y: Int) {
         try {
             blockList[y][x] = block

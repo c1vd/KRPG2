@@ -18,7 +18,7 @@ class Player(
     override val name: String = "Player"
 ) : Entity {
 
-    /* методы, отвечающие за движение */
+
 
     private fun isPlayerInBlock(position: Vector2, blockPosition: Vector2): Boolean {
         return inBlock(position, blockPosition) ||
@@ -27,16 +27,23 @@ class Player(
                 inBlock(position + sizeVector.yVector2(), blockPosition)
     }
 
-    private fun checkPosition(position: Vector2): Boolean {
-        val xRange = clampProgression(position.x - 2, position.x + 2, 0, scene.sceneWidth - 1)
-        val yRange = clampProgression(position.y - 2, position.y + 2, 0, scene.sceneHeight - 1)
+    /**
+     * функция, отвечающая за проверку возможности нахождения игрока на определённой позиции
+     *
+     * @param playerPosition позиция, которую нужно проверить
+     *
+     * @return true, если на этой позиции игрок не находится в блоке, false в ином случае
+     */
+    private fun checkPosition(playerPosition: Vector2): Boolean {
+        val xRange = clampProgression(playerPosition.x - 2, playerPosition.x + 2, 0, scene.sceneWidth - 1)
+        val yRange = clampProgression(playerPosition.y - 2, playerPosition.y + 2, 0, scene.sceneHeight - 1)
         for (blockX in xRange) {
             for (blockY in yRange) {
-                if (scene.getBlock(blockX, blockY) != null) {
-                    val blockPosition = Vector2(blockX.toDouble(), blockY.toDouble())
-                    if (isPlayerInBlock(position, blockPosition)) {
-                        return false
-                    }
+                if (!scene.doesBlockExist(blockX, blockY)) continue
+
+                val blockPosition = Vector2(blockX.toDouble(), blockY.toDouble())
+                if (isPlayerInBlock(playerPosition, blockPosition)) {
+                    return false
                 }
             }
         }
