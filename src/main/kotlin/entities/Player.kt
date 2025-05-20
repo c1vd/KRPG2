@@ -51,25 +51,8 @@ class Player(
         return false
     }
 
-    private fun goInDirection(direction: Vector2, frameTime: Double) {
+    fun goInDirection(direction: Vector2, frameTime: Double) {
         goTo((direction.unit() * frameTime * speed + this.position).round(1))
 
     }
-
-    fun right(frameTime: Double) {
-        goInDirection(Vector2(1.0, 0.0), frameTime)
-    }
-
-    fun left(frameTime: Double) {
-        goInDirection(Vector2(-1.0, 0.0), frameTime)
-    }
-
-    fun up(frameTime: Double) {
-        goInDirection(Vector2(0.0, -1.0), frameTime)
-    }
-
-    fun down(frameTime: Double) {
-        goInDirection(Vector2(0.0, 1.0), frameTime)
-    }
-
 }

@@ -69,7 +69,7 @@ abstract class Scene(private val filename: String) : DefaultScene() {
     }
 
     private fun openSceneFile(): File {
-        return File(Constants.scenesDirectory, filename)
+        return File(Constants.SCENES_DIRECTORY, filename)
     }
 
     fun save() {

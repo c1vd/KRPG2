@@ -5,11 +5,10 @@ import message.Message
 import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
+import other.Directions
 import other.MessageColors
 
 import other.updateValues
-
-import scene.Scene
 import scene.scenes.BeginningScene
 
 
@@ -101,16 +100,16 @@ fun main() {
                 drawer.rectangle(Vector2(width / 2.0, height / 2.0), 16.0, 16.0)
 
                 if (right) {
-                    player.right(frameTime)
+                    player.goInDirection(Directions.RIGHT, frameTime)
                 }
                 if (left) {
-                    player.left(frameTime)
+                    player.goInDirection(Directions.LEFT, frameTime)
                 }
                 if (up) {
-                    player.up(frameTime)
+                    player.goInDirection(Directions.UP, frameTime)
                 }
                 if (down) {
-                    player.down(frameTime)
+                    player.goInDirection(Directions.DOWN, frameTime)
                 }
 
                 if (!scene.areMessagesEmpty())

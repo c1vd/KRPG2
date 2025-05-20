@@ -1,5 +1,5 @@
 package other
 
 object Constants{
-    const val scenesDirectory: String = "data/scenes/"
+    const val SCENES_DIRECTORY: String = "data/scenes/"
 }

@@ -69,9 +69,7 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
         for (x in xRange) {
             for (y in yRange) {
                 val blockToRender = scene.getBlock(x, y)
-                if (blockToRender != null) {
-                    drawBlock(blockToRender, Vector2(x.toDouble(), y.toDouble()))
-                }
+                drawBlock(blockToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
             }
         }
     }
