@@ -55,7 +55,7 @@ fun isPointInBlock(pointPosition: Vector2, blockPosition: Vector2): Boolean {
  * @param right
  * предел справа, не дающий a и b выходить за него
  */
-fun clampProgression(a: Int, b: Int, left: Int, right: Int): IntProgression {
+fun clampProgression(a: Number, b: Number, left: Number, right: Number): IntProgression {
     return clamp(
         a.toDouble(),
         left.toDouble(),

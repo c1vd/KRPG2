@@ -9,6 +9,7 @@ import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
 import other.Directions
+import other.EnhancedBoolean
 import other.MessageColors
 
 import other.updateValues
@@ -21,17 +22,14 @@ var frameTime: Double = 0.0
 fun main() {
     application {
         configure {
-            width = 1280
-            height = 720
-
-            windowResizable = true
+            configure()
         }
         program {
             println("[INFO] KRPG2 Started".setColor(MessageColors.INFO))
-            var right = false
-            var left = false
-            var up = false
-            var down = false
+            val right = EnhancedBoolean(false)
+            val left = EnhancedBoolean(false)
+            val up = EnhancedBoolean(false)
+            val down = EnhancedBoolean(false)
 
             val defaultPlayerX = 0.0
             val defaultPlayerY = 0.0
@@ -43,29 +41,29 @@ fun main() {
 
             var begin = 0.0
             keyboard.setKeyDown(KEY_ARROW_RIGHT) {
-                right = true
+                right.setTrue()
             }
-            keyboard.setKeyDown(KEY_ARROW_LEFT){
-                left = true
+            keyboard.setKeyDown(KEY_ARROW_LEFT) {
+                left.setTrue()
             }
-            keyboard.setKeyDown(KEY_ARROW_UP){
-                up = true
+            keyboard.setKeyDown(KEY_ARROW_UP) {
+                up.setTrue()
             }
-            keyboard.setKeyDown(KEY_ARROW_DOWN){
-                down = true
+            keyboard.setKeyDown(KEY_ARROW_DOWN) {
+                down.setTrue()
             }
 
-            keyboard.setKeyUp(KEY_ARROW_RIGHT){
-                right = false
+            keyboard.setKeyUp(KEY_ARROW_RIGHT) {
+                right.setFalse()
             }
-            keyboard.setKeyUp(KEY_ARROW_LEFT){
-                left = false
+            keyboard.setKeyUp(KEY_ARROW_LEFT) {
+                left.setFalse()
             }
-            keyboard.setKeyUp(KEY_ARROW_UP){
-                up = false
+            keyboard.setKeyUp(KEY_ARROW_UP) {
+                up.setFalse()
             }
-            keyboard.setKeyUp(KEY_ARROW_DOWN){
-                down = false
+            keyboard.setKeyUp(KEY_ARROW_DOWN) {
+                down.setFalse()
             }
 
             mouse.buttonDown.listen {
@@ -101,16 +99,16 @@ fun main() {
 
                 drawer.rectangle(Vector2(width / 2.0, height / 2.0), 16.0, 16.0)
 
-                if (right)
+                if (right.getValue())
                     player.goInDirection(Directions.RIGHT, frameTime)
 
-                if (left)
+                if (left.getValue())
                     player.goInDirection(Directions.LEFT, frameTime)
 
-                if (up)
+                if (up.getValue())
                     player.goInDirection(Directions.UP, frameTime)
 
-                if (down)
+                if (down.getValue())
                     player.goInDirection(Directions.DOWN, frameTime)
 
 
@@ -123,4 +121,11 @@ fun main() {
             scene.save()
         }
     }
+}
+
+private fun Configuration.configure() {
+    width = 1280
+    height = 720
+
+    windowResizable = true
 }
