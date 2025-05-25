@@ -3,12 +3,14 @@ package render
 import background.Background
 import blocks.Block
 import camera.Camera
+import extensions.infix.multiply
 import other.clampProgression
 import other.getCoordinatesOnScreen
 import message.Message
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.Drawer
 import org.openrndr.math.Vector2
+import other.IntCoordinates
 import other.blockSize
 import other.renderDistance
 import scene.BossfightScene
@@ -54,32 +56,27 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
         )
     }
 
-    private fun drawBackgrounds(xRange: IntProgression, yRange: IntProgression, scene: Scene) {
-        for (x in xRange ) {
-            for (y in yRange) {
+    private fun drawBackgrounds(coordinatesToRender: List<IntCoordinates>, scene: Scene) {
+        for ((x, y) in coordinatesToRender) {
                 val backgroundToRender = scene.backgrounds.get(x, y)
                 drawBackground(backgroundToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
-            }
         }
     }
 
-    private fun drawBlocks(xRange: IntProgression, yRange: IntProgression, scene: Scene) {
-        for (x in xRange) {
-            for (y in yRange) {
-                val blockToRender = scene.blocks.get(x, y)
-                drawBlock(blockToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
-            }
+    private fun drawBlocks(coordinatesToRender: List<IntCoordinates>, scene: Scene) {
+        for ((x, y) in coordinatesToRender) {
+            val blockToRender = scene.blocks.get(x, y)
+            drawBlock(blockToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
         }
     }
 
     fun drawScene(scene: DefaultScene) {
         when (scene) {
             is Scene -> {
+                val coordinatesToRender = getXRangeToRender(scene) multiply getYRangeToRender(scene)
 
-                val xRange = getXRangeToRender(scene)
-                val yRange = getYRangeToRender(scene)
-                drawBackgrounds(xRange, yRange, scene)
-                drawBlocks(xRange, yRange, scene)
+                drawBackgrounds(coordinatesToRender, scene)
+                drawBlocks(coordinatesToRender, scene)
             }
 
             is BossfightScene -> {}

@@ -6,12 +6,13 @@ import blocks.blocks.Mud
 import blocks.blocks.Bedrock
 import blocks.blocks.Unknown
 import camera.Camera
+import extensions.toPixelVector2
 import org.openrndr.math.Vector2
 import org.openrndr.math.clamp
 
 
 fun getCoordinatesOnScreen(position: Vector2, camera: Camera): Vector2 {
-    return (position - camera.startScreenCoordinates()) * blockSize
+    return (position - camera.startScreenCoordinates()).toPixelVector2()
 }
 
 
@@ -66,4 +67,3 @@ fun clampProgression(a: Number, b: Number, left: Number, right: Number): IntProg
         right.toDouble()
     ).toInt()
 }
-
