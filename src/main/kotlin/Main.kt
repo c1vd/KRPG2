@@ -1,5 +1,6 @@
 import camera.Camera
 import entities.Player
+import extensions.setColor
 import extensions.setKeyDown
 import extensions.setKeyUp
 import render.Draw
@@ -8,6 +9,7 @@ import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
 import other.Directions
+import other.MessageColors
 
 import other.updateValues
 import scene.scenes.BeginningScene
@@ -25,6 +27,7 @@ fun main() {
             windowResizable = true
         }
         program {
+            println("[INFO] KRPG2 Started".setColor(MessageColors.INFO))
             var right = false
             var left = false
             var up = false
@@ -34,7 +37,7 @@ fun main() {
             val defaultPlayerY = 0.0
 
             val scene = BeginningScene
-            val player = Player(scene, Vector2(defaultPlayerX, defaultPlayerY), Vector2(0.5, 0.5), speed = 5.0)
+            val player = Player(scene, Vector2(defaultPlayerX, defaultPlayerY), Vector2(0.5, 0.5))
             val camera = Camera(player)
             val renderer = Draw(drawer, camera)
 
@@ -72,7 +75,6 @@ fun main() {
             }
             scene.messageController.addMessage(Message("Hello World", player))
             scene.messageController.addMessage(Message("Message2", player))
-
 
             extend {
                 frameTime = seconds - begin

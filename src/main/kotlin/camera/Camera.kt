@@ -6,15 +6,18 @@ import other.blocksPerSemiWidth
 import org.openrndr.math.Vector2
 
 class Camera(private var player: Player) {
-    var position: Vector2 = player.position
-
+    private var position: Vector2 = player.position
+    val x: Double
+        get() = position.x
+    val y: Double
+        get() = position.y
     // изменение координат камеры на более близкие к игроку
     fun moveCamera() {
         position = player.position
     }
 
     /**
-     * метод, меняющий игрока, на которого нужно смотреть
+     * Метод, меняющий игрока, на которого нужно смотреть
      *
      * @param newPlayer игрок, за которым нужно смотреть
      */
@@ -23,6 +26,6 @@ class Camera(private var player: Player) {
     }
 
     fun startScreenCoordinates(): Vector2{
-        return Vector2(position.x -  blocksPerSemiWidth, position.y - blocksPerSemiHeight)
+        return Vector2(x -  blocksPerSemiWidth, y - blocksPerSemiHeight)
     }
 }

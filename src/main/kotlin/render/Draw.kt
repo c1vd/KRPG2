@@ -38,8 +38,8 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
 
     private fun getXRangeToRender(scene: Scene): IntProgression {
         return clampProgression(
-            camera.position.x - renderDistance,
-            camera.position.x + renderDistance,
+            camera.x - renderDistance,
+            camera.x + renderDistance,
             0,
             scene.sceneWidth - 1
         )
@@ -47,17 +47,17 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
 
     private fun getYRangeToRender(scene: Scene): IntProgression {
         return clampProgression(
-            camera.position.y - renderDistance,
-            camera.position.y + renderDistance,
+            camera.y - renderDistance,
+            camera.y + renderDistance,
             0,
             scene.sceneHeight - 1
         )
     }
 
     private fun drawBackgrounds(xRange: IntProgression, yRange: IntProgression, scene: Scene) {
-        for (x in xRange) {
+        for (x in xRange ) {
             for (y in yRange) {
-                val backgroundToRender = scene.getBackground(x, y)
+                val backgroundToRender = scene.backgrounds.get(x, y)
                 drawBackground(backgroundToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
             }
         }
@@ -66,7 +66,7 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
     private fun drawBlocks(xRange: IntProgression, yRange: IntProgression, scene: Scene) {
         for (x in xRange) {
             for (y in yRange) {
-                val blockToRender = scene.getBlock(x, y)
+                val blockToRender = scene.blocks.get(x, y)
                 drawBlock(blockToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
             }
         }
@@ -75,6 +75,7 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
     fun drawScene(scene: DefaultScene) {
         when (scene) {
             is Scene -> {
+
                 val xRange = getXRangeToRender(scene)
                 val yRange = getYRangeToRender(scene)
                 drawBackgrounds(xRange, yRange, scene)

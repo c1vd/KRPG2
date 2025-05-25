@@ -1,14 +1,13 @@
 package scene
 
-import background.Background
-import blocks.Block
 import blocks.blocks.Unknown
 import entities.NPC
-import extensions.toIntArray
+import extensions.setColor
+import extensions.toIntList
+import matrixes.BackgroundMatrix
+import matrixes.BlockMatrix
 import other.idToBlock
-import message.Message
 import message.MessageController
-import org.openrndr.collections.push
 import other.Constants
 import other.MessageColors
 import java.io.File
@@ -16,30 +15,10 @@ import java.io.File
 abstract class Scene(private val filename: String) : DefaultScene() {
     val sceneWidth: Int
     val sceneHeight: Int
-    private val blocks: BlockMatrix
-    private val backgrounds: BackgroundMatrix
-    private val nonPlayableCharacters = mutableListOf<NPC>()
+    val blocks: BlockMatrix
+    val backgrounds: BackgroundMatrix
+    val nonPlayableCharacters = mutableListOf<NPC>()
     val messageController = MessageController()
-
-    fun getBlock(x: Int, y: Int): Block? {
-        return blocks.get(x, y)
-    }
-
-    fun doesBlockExist(x: Int, y: Int): Boolean{
-        return getBlock(x, y) != null
-    }
-
-    private fun setBlock(block: Block, x: Int, y: Int) {
-        blocks.set(block, x, y)
-    }
-
-    fun getBackground(x: Int, y: Int): Background? {
-        return backgrounds.get(x, y)
-    }
-
-    private fun setBackground(background: Background, x: Int, y: Int) {
-        backgrounds.set(background, x, y)
-    }
 
     private fun openSceneFile(): File {
         return File(Constants.SCENES_DIRECTORY, filename)
@@ -51,41 +30,42 @@ abstract class Scene(private val filename: String) : DefaultScene() {
         file.writeText("$sceneWidth $sceneHeight\n")
         for (x in 0..<sceneWidth) {
             for (y in 0..<sceneHeight) {
-                val block = getBlock(x, y)
+                val block = blocks.get(x, y)
                 file.appendText("${block?.id ?: continue} $x $y\n")
             }
         }
     }
 
     init {
-        var file: File = openSceneFile()
+        val file: File = openSceneFile()
         if (!file.exists()) {
-            throw Exception(MessageColors.ERROR + "ERROR: No File or Directory")
+            throw Exception("ERROR: No File or Directory".setColor(MessageColors.ERROR))
         }
 
         try {
             val lines = file.readLines()
-            val (sceneX, sceneY) = lines.first().split(' ').toIntArray()
+            val (sceneX, sceneY) = lines.first().split(' ').toIntList()
             sceneWidth = sceneX
             sceneHeight = sceneY
             blocks = BlockMatrix(sceneWidth, sceneHeight)
             backgrounds = BackgroundMatrix(sceneWidth, sceneHeight)
             for (line in lines.drop(1)) {
                 try {
-                    val (blockId, x, y) = line.split(' ').toIntArray()
+                    val (blockId, x, y) = line.split(' ').toIntList()
                     val blockToAdd = idToBlock(blockId)
 
-                    setBlock(blockToAdd ?: Unknown, x, y)
+                    blocks.set(blockToAdd ?: Unknown, x, y)
                 } catch (_: Exception) {
-                    println("WARNING: Wrong Block")
+                    println("WARNING: Wrong Block or Block Format")
                 }
 
             }
         } catch (_: Exception) {
-            throw Exception("ERROR: Wrong Format")
+            throw Exception("ERROR: Wrong Format".setColor(MessageColors.ERROR))
         }
 
     }
+
 
     fun addNPC(npc: NPC) {
         nonPlayableCharacters.add(npc)

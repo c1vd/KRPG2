@@ -1,6 +1,6 @@
 package extensions
 
 
-fun List<String>.toIntArray(): List<Int> {
+fun List<String>.toIntList(): List<Int> {
     return this.map { it.toInt() }
 }

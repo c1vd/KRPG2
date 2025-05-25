@@ -4,8 +4,9 @@ import extensions.round
 import extensions.unit
 import extensions.xVector2
 import extensions.yVector2
+import inventory.PlayerInventory
 import other.clampProgression
-import other.inBlock
+import other.isPointInBlock
 import org.openrndr.math.Vector2
 import scene.Scene
 
@@ -17,18 +18,17 @@ class Player(
     private var speed: Double = 5.0,
     override val name: String = "Player"
 ) : Entity {
-
-
+    val inventory = PlayerInventory()
 
     private fun isPlayerInBlock(position: Vector2, blockPosition: Vector2): Boolean {
-        return inBlock(position, blockPosition) ||
-                inBlock(position + sizeVector, blockPosition) ||
-                inBlock(position + sizeVector.xVector2(), blockPosition) ||
-                inBlock(position + sizeVector.yVector2(), blockPosition)
+        return isPointInBlock(position, blockPosition) ||
+                isPointInBlock(position + sizeVector, blockPosition) ||
+                isPointInBlock(position + sizeVector.xVector2(), blockPosition) ||
+                isPointInBlock(position + sizeVector.yVector2(), blockPosition)
     }
 
     /**
-     * Функция, отвечающая за проверку возможности нахождения игрока на определённой позиции
+     * Метод, отвечающий за проверку возможности нахождения игрока на определённой позиции
      *
      * @param playerPosition позиция, которую нужно проверить
      *
@@ -39,7 +39,7 @@ class Player(
         val yRange = clampProgression(playerPosition.y - 2, playerPosition.y + 2, 0, scene.sceneHeight - 1)
         for (blockX in xRange) {
             for (blockY in yRange) {
-                if (!scene.doesBlockExist(blockX, blockY)) continue
+                if (!scene.blocks.exists(blockX, blockY)) continue
 
                 val blockPosition = Vector2(blockX.toDouble(), blockY.toDouble())
                 if (isPlayerInBlock(playerPosition, blockPosition)) {
@@ -51,15 +51,10 @@ class Player(
     }
 
     private fun goTo(position: Vector2): Boolean {
-        if (checkPosition(position)) {
-            this.position = position
-            return true
-        }
-        return false
+        return checkPosition(position).also { if(it) this.position = position }
     }
 
     fun goInDirection(direction: Vector2, frameTime: Double) {
         goTo((direction.unit() * frameTime * speed + this.position).round(1))
-
     }
 }

@@ -8,9 +8,6 @@ import blocks.blocks.Unknown
 import camera.Camera
 import org.openrndr.math.Vector2
 import org.openrndr.math.clamp
-import java.security.SecureRandom
-import kotlin.math.max
-import kotlin.math.min
 
 
 fun getCoordinatesOnScreen(position: Vector2, camera: Camera): Vector2 {
@@ -19,7 +16,7 @@ fun getCoordinatesOnScreen(position: Vector2, camera: Camera): Vector2 {
 
 
 fun checkIndex(index: Int, arraySize: Int): Boolean {
-    return index in 0..<arraySize
+    return index in 0 until arraySize
 }
 
 fun idToBlock(id: Int): Block? {
@@ -35,13 +32,13 @@ fun idToBlock(id: Int): Block? {
 /**
  * Функция, проверяющая находится ли точка внутри блока
  *
- * @param position координата точки, которую нужно проверить
+ * @param pointPosition координата точки, которую нужно проверить
  * @param blockPosition координата блока
  *
  * @return true если точка внутри блока, false в ином случае
  */
-fun inBlock(position: Vector2, blockPosition: Vector2): Boolean {
-    val a = position - blockPosition
+fun isPointInBlock(pointPosition: Vector2, blockPosition: Vector2): Boolean {
+    val a = pointPosition - blockPosition
     return a.x < 1 && a.y < 1 && a.x > 0 && a.y > 0
 }
 
@@ -58,7 +55,7 @@ fun inBlock(position: Vector2, blockPosition: Vector2): Boolean {
  * @param right
  * предел справа, не дающий a и b выходить за него
  */
-fun clampProgression(a: Number, b: Number, left: Number, right: Number): IntProgression {
+fun clampProgression(a: Int, b: Int, left: Int, right: Int): IntProgression {
     return clamp(
         a.toDouble(),
         left.toDouble(),

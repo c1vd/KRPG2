@@ -27,3 +27,7 @@ fun Vector2.unit(): Vector2{
 fun Vector2.round(n: Int): Vector2{
     return Vector2(x.round(n), y.round(n))
 }
+
+fun Vector2(x: Int, y: Int): Vector2{
+    return Vector2(x.toDouble(), y.toDouble())
+}
