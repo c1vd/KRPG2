@@ -1,15 +1,15 @@
 package scene
 
-import blocks.blocks.Unknown
+
 import entities.NPC
 import extensions.setColor
 import extensions.toIntList
 import matrixes.BackgroundMatrix
 import matrixes.BlockMatrix
-import other.idToBlock
 import message.MessageController
 import other.Constants
 import other.MessageColors
+import other.Registrator.idToBlock
 import java.io.File
 
 abstract class Scene(private val filename: String) : DefaultScene() {
@@ -52,9 +52,10 @@ abstract class Scene(private val filename: String) : DefaultScene() {
             for (line in lines.drop(1)) {
                 try {
                     val (blockId, x, y) = line.split(' ').toIntList()
+
                     val blockToAdd = idToBlock(blockId)
 
-                    blocks.set(blockToAdd ?: Unknown, x, y)
+                    blocks.set(blockToAdd, x, y)
                 } catch (_: Exception) {
                     println("WARNING: Wrong Block or Block Format")
                 }

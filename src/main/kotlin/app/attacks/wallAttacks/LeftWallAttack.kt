@@ -1,6 +1,6 @@
-package attack.attacks.wallAttacks
+package app.attacks.wallAttacks
 
-import attack.attacks.WallAttack
+import app.attacks.WallAttack
 
 class LeftWallAttack(
     override val damage: Double,

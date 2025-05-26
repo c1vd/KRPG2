@@ -1,4 +1,4 @@
-package attack.attacks
+package app.attacks
 
 import attack.Attack
 

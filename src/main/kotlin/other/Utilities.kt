@@ -1,34 +1,24 @@
 package other
 
+import background.Background
+import background.UnknownBackground
 import blocks.Block
-import blocks.blocks.Dirt
-import blocks.blocks.Mud
-import blocks.blocks.Bedrock
-import blocks.blocks.Unknown
+import blocks.Unknown
+
 import camera.Camera
 import extensions.toPixelVector2
+import items.Food
+import items.UnknownFood
 import org.openrndr.math.Vector2
 import org.openrndr.math.clamp
 
 
-fun getCoordinatesOnScreen(position: Vector2, camera: Camera): Vector2 {
-    return (position - camera.startScreenCoordinates()).toPixelVector2()
-}
+fun getCoordinatesOnScreen(position: Vector2, camera: Camera): Vector2 =
+    (position - camera.startScreenCoordinates()).toPixelVector2()
 
 
-fun checkIndex(index: Int, arraySize: Int): Boolean {
-    return index in 0 until arraySize
-}
+fun checkIndex(index: Int, arraySize: Int): Boolean = index in 0 until arraySize
 
-fun idToBlock(id: Int): Block? {
-    return when (id) {
-        0 -> Unknown
-        1 -> Dirt
-        2 -> Bedrock
-        3 -> Mud
-        else -> null
-    }
-}
 
 /**
  * Функция, проверяющая находится ли точка внутри блока
