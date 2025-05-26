@@ -3,22 +3,26 @@
 Данное приложение представляет собой игру, основанную на 2д движке для игры, сделанном поверх OpenRNDR, библиотеки,
 которая нужна для использования OpenGL в Kotlin.<br>
 
+Игра(движок) подходит под любые платформы.
+Разрешается очистить пакет app и начать разработку своей игры, так как движок никак не зависит от app.
+
 Проект состоит из множества директорий:
 
 - app (само приложение)
-- attack (различные атаки, которые наносят боссы)
-- background (пол)
-- blocks (стены)
-- camera
-- entities
-- extensions (добавление новых функций для некоторых классов)
-- inventory
-- items (еда)
-- matrixes (матрицы)
-- message (сообщения)
-- other (разное)
-- render (рисование на экране)
-- scene
+- engine (движок)
+- engine/attack (различные атаки, которые наносят боссы)
+- engine/background (пол)
+- engine/blocks (стены)
+- engine/camera
+- engine/entities
+- engine/extensions (добавление новых функций для некоторых классов)
+- engine/inventory
+- engine/items (еда)
+- engine/matrixes (матрицы)
+- engine/message (сообщения)
+- engine/other (разное)
+- engine/render (рисование на экране)
+- engine/scene
 
 ### Особенности
 
