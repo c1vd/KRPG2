@@ -3,6 +3,7 @@ package scene
 
 import entities.NPC
 import extensions.setColor
+import extensions.split
 import extensions.toIntList
 import matrixes.BackgroundMatrix
 import matrixes.BlockMatrix
@@ -44,20 +45,19 @@ abstract class Scene(private val filename: String) : DefaultScene() {
 
         try {
             val lines = file.readLines()
-            val (sceneX, sceneY) = lines.first().split(' ').toIntList()
+            val (sceneX, sceneY) = lines.first().split().toIntList()
             sceneWidth = sceneX
             sceneHeight = sceneY
             blocks = BlockMatrix(sceneWidth, sceneHeight)
             backgrounds = BackgroundMatrix(sceneWidth, sceneHeight)
             for (line in lines.drop(1)) {
                 try {
-                    val (blockId, x, y) = line.split(' ').toIntList()
-
+                    val (blockId, x, y) = line.split().toIntList()
                     val blockToAdd = idToBlock(blockId)
 
                     blocks.set(blockToAdd, x, y)
                 } catch (_: Exception) {
-                    println("WARNING: Wrong Block or Block Format")
+                    println("WARNING: Wrong Block Format")
                 }
 
             }
