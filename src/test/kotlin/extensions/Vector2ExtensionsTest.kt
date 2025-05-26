@@ -1,5 +1,8 @@
 package extensions
 
+import engine.extensions.round
+import engine.extensions.unit
+import engine.extensions.xVector2
 import org.junit.Test
 import org.openrndr.math.Vector2
 import org.openrndr.panel.elements.round

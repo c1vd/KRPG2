@@ -1,5 +1,7 @@
 package other
 
+import engine.other.checkIndex
+import engine.other.clampProgression
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

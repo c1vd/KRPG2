@@ -1,22 +1,22 @@
 package app
 
-import camera.Camera
-import entities.Player
-import extensions.setColor
-import extensions.setKeyDown
-import extensions.setKeyUp
-import render.Draw
-import message.Message
+import engine.camera.Camera
+import engine.entities.Player
+import engine.extensions.setColor
+import engine.extensions.setKeyDown
+import engine.extensions.setKeyUp
+import engine.render.Draw
+import engine.message.Message
 import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
-import other.Directions
-import other.EnhancedBoolean
-import other.MessageColors
+import engine.other.Directions
+import engine.other.EnhancedBoolean
+import engine.other.MessageColors
 
 
-import other.updateValues
-import scene.Scene
+import engine.other.updateValues
+import engine.scene.Scene
 
 object BeginningScene : Scene("beginningScene.scene")
 

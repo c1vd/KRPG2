@@ -1,6 +1,6 @@
 package app.attacks
 
-import attack.Attack
+import engine.attack.Attack
 
 abstract class WallAttack : Attack(){
     abstract val noJump: Boolean

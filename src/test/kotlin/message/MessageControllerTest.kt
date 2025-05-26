@@ -1,5 +1,8 @@
 package message
 
+import engine.message.Message
+import engine.message.MessageController
+import engine.message.NoMessagesMessage
 import org.junit.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
