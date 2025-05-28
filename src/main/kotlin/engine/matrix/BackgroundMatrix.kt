@@ -1,4 +1,4 @@
-package engine.matrixes
+package engine.matrix
 
 import engine.background.Background
 

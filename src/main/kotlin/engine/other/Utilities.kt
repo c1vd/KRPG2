@@ -26,6 +26,9 @@ fun isPointInBlock(pointPosition: Vector2, blockPosition: Vector2): Boolean {
     return a.x < 1 && a.y < 1 && a.x > 0 && a.y > 0
 }
 
+fun clampInt(value: Number, min: Number, max: Number): Int {
+    return clamp(value.toDouble(), min.toDouble(), max.toDouble()).toInt()
+}
 
 /**
  * Функция, нужная для создания IntProgression, которая находится в определённых пределах
@@ -40,13 +43,13 @@ fun isPointInBlock(pointPosition: Vector2, blockPosition: Vector2): Boolean {
  * предел справа, не дающий a и b выходить за него
  */
 fun clampProgression(a: Number, b: Number, left: Number, right: Number): IntProgression {
-    return clamp(
-        a.toDouble(),
-        left.toDouble(),
-        right.toDouble()
-    ).toInt()..clamp(
-        b.toDouble(),
-        left.toDouble(),
-        right.toDouble()
-    ).toInt()
+    return clampInt(
+        a,
+        left,
+        right
+    )..clampInt(
+        b,
+        left,
+        right
+    )
 }

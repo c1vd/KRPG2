@@ -5,8 +5,8 @@ import engine.entities.NPC
 import engine.extensions.setColor
 import engine.extensions.split
 import engine.extensions.toIntList
-import engine.matrixes.BackgroundMatrix
-import engine.matrixes.BlockMatrix
+import engine.matrix.BackgroundMatrix
+import engine.matrix.BlockMatrix
 import engine.message.MessageController
 import engine.other.Constants
 import engine.other.MessageColors

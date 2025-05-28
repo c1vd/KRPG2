@@ -2,6 +2,6 @@ package engine.inventory
 
 import engine.items.Food
 
-class PlayerInventory : Inventory() {
-    override val items: Array<Food?> = Array(10){null}
+class PlayerInventory(size: Int) : Inventory() {
+    override val items: Array<Food?> = Array(size) { null }
 }

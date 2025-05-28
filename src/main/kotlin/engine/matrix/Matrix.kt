@@ -1,4 +1,4 @@
-package engine.matrixes
+package engine.matrix
 
 abstract class Matrix<T> {
     protected abstract val matrix: Array<Array<T?>>

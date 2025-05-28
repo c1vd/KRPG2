@@ -11,14 +11,15 @@ import org.openrndr.math.Vector2
 import engine.scene.Scene
 
 
-class Player(
+open class Player(
     override var scene: Scene,
     override var position: Vector2 = Vector2(0.0, 0.0),
     override val sizeVector: Vector2 = Vector2(1.0, 1.0),
     private var speed: Double = 5.0,
-    override val name: String = "Player"
+    override val name: String = "Player",
+    inventorySize: Int = 10
 ) : Entity {
-    val inventory = PlayerInventory()
+    val inventory = PlayerInventory(inventorySize)
 
     private fun isPlayerInBlock(position: Vector2, blockPosition: Vector2): Boolean {
         return isPointInBlock(position, blockPosition) ||
