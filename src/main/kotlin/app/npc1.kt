@@ -1,6 +1,7 @@
 package app
 
 import engine.entities.NPC
+import engine.message.Message
 import engine.scene.Scene
 import org.openrndr.draw.ColorBuffer
 import org.openrndr.math.Vector2
@@ -10,12 +11,11 @@ object npc1 : NPC() {
         get() = TODO("Not yet implemented")
 
     override fun interact() {
-        TODO("Not yet implemented")
+        scene.messageController.addMessage(Message("I am npc1", this))
     }
 
-    override var scene: Scene
-        get() = TODO("Not yet implemented")
-        set(value) {}
+    override lateinit var scene: Scene
+
     override val name: String
         get() = "npc1"
     override var position: Vector2

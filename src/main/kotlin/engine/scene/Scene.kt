@@ -69,6 +69,7 @@ abstract class Scene(private val filename: String) : DefaultScene() {
 
 
     fun addNPC(npc: NPC) {
+        npc.scene = this
         nonPlayableCharacters.add(npc)
     }
 }

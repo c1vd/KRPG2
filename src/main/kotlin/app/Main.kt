@@ -41,6 +41,7 @@ fun main() {
             val scene = BeginningScene
             scene.addNPC(npc1)
             scene.addNPC(npc2)
+
             val player = Player(
                 scene,
                 Vector2(defaultPlayerX, defaultPlayerY),
@@ -135,10 +136,12 @@ fun main() {
 
                 if (!scene.messageController.areMessagesEmpty())
                     renderer.showMessage(scene.messageController.getCurrentMessage())
+                // !REMOVE IT!
+                scene.messageController.clearMessages()
 
                 // render
                 renderer.drawScene(player.scene)
-                println(player.getClosestNPC()?.name)
+                println(player.interactWithNPC())
             }
             scene.save()
         }

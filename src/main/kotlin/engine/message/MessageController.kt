@@ -19,4 +19,8 @@ class MessageController {
     fun getCurrentMessage(): Message {
         return messages.firstOrNull() ?: NoMessagesMessage
     }
+
+    fun clearMessages(){
+        messages.clear()
+    }
 }

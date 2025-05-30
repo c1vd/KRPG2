@@ -25,6 +25,9 @@ class Camera(private var player: Player) {
         player = newPlayer
     }
 
+    /**
+     * Метод, возвращающий координаты начала экрана в блоках
+     */
     fun startScreenCoordinates(): Vector2{
         return Vector2(x -  blocksPerSemiWidth, y - blocksPerSemiHeight)
     }

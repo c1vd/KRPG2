@@ -1,5 +1,6 @@
 package engine.entities
 
+import engine.extensions.infix.multiply
 import engine.extensions.round
 import engine.extensions.unit
 import engine.extensions.xVector2
@@ -22,17 +23,30 @@ open class Player(
 ) : Entity {
     val inventory = PlayerInventory(inventorySize)
 
+    /**
+     * Метод, проверяющий будет ли находиться игрок в определенном блоке,
+     * если его передвинуть на указанные координаты
+     *
+     * @param playerPosition проверяемая позиция игрока
+     * @param blockPosition позиция блока
+     *
+     * @return true, если игрок будет задевать заданный блок, false в ином
+     * случае
+     */
     private fun isPlayerInBlock(
-        position: Vector2,
+        playerPosition: Vector2,
         blockPosition: Vector2
     ): Boolean {
-        return isPointInBlock(position, blockPosition) ||
-                isPointInBlock(position + sizeVector, blockPosition) ||
+        return isPointInBlock(playerPosition, blockPosition) ||
+                isPointInBlock(playerPosition + sizeVector, blockPosition) ||
                 isPointInBlock(
-                    position + sizeVector.xVector2(),
+                    playerPosition + sizeVector.xVector2(),
                     blockPosition
                 ) ||
-                isPointInBlock(position + sizeVector.yVector2(), blockPosition)
+                isPointInBlock(
+                    playerPosition + sizeVector.yVector2(),
+                    blockPosition
+                )
     }
 
     /**
@@ -55,15 +69,14 @@ open class Player(
             0,
             scene.sceneHeight - 1
         )
-        for (blockX in xRange) {
-            for (blockY in yRange) {
-                if (!scene.blocks.exists(blockX, blockY)) continue
 
-                val blockPosition =
-                    Vector2(blockX.toDouble(), blockY.toDouble())
-                if (isPlayerInBlock(playerPosition, blockPosition)) {
-                    return false
-                }
+        val blocksCoordinatesToCheck = xRange multiply yRange
+        for ((x, y) in blocksCoordinatesToCheck) {
+            if (!scene.blocks.exists(x, y)) continue
+
+            val blockPosition = Vector2(x.toDouble(), y.toDouble())
+            if (isPlayerInBlock(playerPosition, blockPosition)) {
+                return false
             }
         }
         return true
@@ -77,13 +90,13 @@ open class Player(
         goTo((direction.unit() * frameTime * speed + this.position).round(1))
     }
 
-    fun getNPCsToInteract(): List<NPC> {
+    private fun getNPCsToInteract(): List<NPC> {
         return scene.nonPlayableCharacters.filter {
             (position - it.position).length < Constants.NPC_INTERACTION_DISTANCE
         }
     }
 
-    fun getClosestNPC(): NPC? {
+    private fun getClosestNPC(): NPC? {
         return getNPCsToInteract().minByOrNull {
             (position - it.position).length
         }
