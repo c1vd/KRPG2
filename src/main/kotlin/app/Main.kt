@@ -34,6 +34,7 @@ fun main() {
             var left = false
             var up = false
             var down = false
+            var insertDown = false
 
             val defaultPlayerX = 0.0
             val defaultPlayerY = 0.0
@@ -63,6 +64,9 @@ fun main() {
             keyboard.setKeyDown(KEY_ARROW_DOWN) {
                 down = true
             }
+            keyboard.setKeyDown(KEY_INSERT){
+                insertDown = true
+            }
 
             keyboard.setKeyUp(KEY_ARROW_RIGHT) {
                 right = false
@@ -75,6 +79,9 @@ fun main() {
             }
             keyboard.setKeyUp(KEY_ARROW_DOWN) {
                 down = false
+            }
+            keyboard.setKeyUp(KEY_INSERT){
+                insertDown = false
             }
 
             mouse.buttonDown.listen {
@@ -121,27 +128,29 @@ fun main() {
                     16.0
                 )
 
-                if (right)
-                    player.goInDirection(Directions.RIGHT, frameTime)
-
-                if (left)
-                    player.goInDirection(Directions.LEFT, frameTime)
-
-                if (up)
-                    player.goInDirection(Directions.UP, frameTime)
-
-                if (down)
-                    player.goInDirection(Directions.DOWN, frameTime)
 
 
                 if (!scene.messageController.areMessagesEmpty())
                     renderer.showMessage(scene.messageController.getCurrentMessage())
-                // !REMOVE IT!
-                scene.messageController.clearMessages()
+                else {
+                    if (right)
+                        player.goInDirection(Directions.RIGHT, frameTime)
+
+                    if (left)
+                        player.goInDirection(Directions.LEFT, frameTime)
+
+                    if (up)
+                        player.goInDirection(Directions.UP, frameTime)
+
+                    if (down)
+                        player.goInDirection(Directions.DOWN, frameTime)
+
+                    if(insertDown)
+                        player.interactWithNPC()
+                }
 
                 // render
                 renderer.drawScene(player.scene)
-                println(player.interactWithNPC())
             }
             scene.save()
         }
