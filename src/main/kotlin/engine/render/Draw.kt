@@ -4,6 +4,7 @@ import engine.background.Background
 import engine.blocks.Block
 import engine.camera.Camera
 import engine.extensions.infix.multiply
+import engine.extensions.yVector2
 import engine.other.clampProgression
 import engine.other.getCoordinatesOnScreen
 import engine.message.Message
@@ -26,16 +27,36 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
         drawer.fill = color
     }
 
+    fun setTextColor(color: ColorRGBa) {
+        drawer.stroke = color
+    }
+
     fun showMessage(message: Message) {
-        drawer.text("${message.speaker.name}: ${message.text}", Vector2(10.0, 10.0))
+        drawer.text(
+            "${message.speaker.name}: ${message.text}",
+            Vector2(10.0, 10.0)
+        )
     }
 
     private fun drawBlock(block: Block, blockPosition: Vector2) {
-        drawer.image(block.texture, getCoordinatesOnScreen(blockPosition, camera), blockSize, blockSize)
+        drawer.image(
+            block.texture,
+            getCoordinatesOnScreen(blockPosition, camera),
+            blockSize,
+            blockSize
+        )
     }
 
-    private fun drawBackground(background: Background, backgroundPosition: Vector2) {
-        drawer.image(background.texture, getCoordinatesOnScreen(backgroundPosition, camera), blockSize, blockSize)
+    private fun drawBackground(
+        background: Background,
+        backgroundPosition: Vector2
+    ) {
+        drawer.image(
+            background.texture,
+            getCoordinatesOnScreen(backgroundPosition, camera),
+            blockSize,
+            blockSize
+        )
     }
 
     private fun getXRangeToRender(scene: Scene): IntProgression {
@@ -56,27 +77,52 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
         )
     }
 
-    private fun drawBackgrounds(coordinatesToRender: List<IntCoordinates>, scene: Scene) {
+    private fun drawBackgrounds(
+        coordinatesToRender: List<IntCoordinates>,
+        scene: Scene
+    ) {
         for ((x, y) in coordinatesToRender) {
-                val backgroundToRender = scene.backgrounds.get(x, y)
-                drawBackground(backgroundToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
+            val backgroundToRender = scene.backgrounds.get(x, y)
+            drawBackground(
+                backgroundToRender ?: continue,
+                Vector2(x.toDouble(), y.toDouble())
+            )
         }
     }
 
-    private fun drawBlocks(coordinatesToRender: List<IntCoordinates>, scene: Scene) {
+    private fun drawBlocks(
+        coordinatesToRender: List<IntCoordinates>,
+        scene: Scene
+    ) {
         for ((x, y) in coordinatesToRender) {
             val blockToRender = scene.blocks.get(x, y)
-            drawBlock(blockToRender ?: continue, Vector2(x.toDouble(), y.toDouble()))
+            drawBlock(
+                blockToRender ?: continue,
+                Vector2(x.toDouble(), y.toDouble())
+            )
         }
+    }
+
+    private fun drawNicknames(scene: Scene) {
+        for (npc in scene.nonPlayableCharacters)
+            drawer.text(
+                npc.name, getCoordinatesOnScreen(
+                    npc.position +
+                            npc.sizeVector.yVector2(),
+                    camera
+                )
+            )
     }
 
     fun drawScene(scene: DefaultScene) {
         when (scene) {
             is Scene -> {
-                val coordinatesToRender = getXRangeToRender(scene) multiply getYRangeToRender(scene)
+                val coordinatesToRender =
+                    getXRangeToRender(scene) multiply getYRangeToRender(scene)
 
                 drawBackgrounds(coordinatesToRender, scene)
                 drawBlocks(coordinatesToRender, scene)
+                drawNicknames(scene)
             }
 
             is BossfightScene -> {}

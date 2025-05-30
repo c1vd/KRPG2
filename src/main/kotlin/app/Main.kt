@@ -40,10 +40,16 @@ fun main() {
             val defaultPlayerY = 0.0
 
             val scene = BeginningScene
-            val player = Player(scene, Vector2(defaultPlayerX, defaultPlayerY), Vector2(0.5, 0.5))
+            scene.addNPC(npc1)
+            scene.addNPC(npc2)
+            val player = Player(
+                scene,
+                Vector2(defaultPlayerX, defaultPlayerY),
+                Vector2(0.5, 0.5)
+            )
             val camera = Camera(player)
             val renderer = Draw(drawer, camera)
-
+            renderer.setTextColor(ColorRGBa.WHITE)
             var begin = 0.0
             keyboard.setKeyDown(KEY_ARROW_RIGHT) {
                 right.setTrue()
@@ -76,8 +82,12 @@ fun main() {
                     scene.messageController.popMessage()
                 }
             }
-            scene.messageController.addMessage(Message("Hello World", player))
-            scene.messageController.addMessage(Message("Message2", player))
+            scene.messageController.addMessage(
+                Message("Hello World", player)
+            )
+            scene.messageController.addMessage(
+                Message("Message2", player)
+            )
 
             extend {
                 frameTime = seconds - begin
@@ -102,7 +112,14 @@ fun main() {
                     20.0
                 )
 
-                drawer.rectangle(Vector2(width / 2.0, height / 2.0), 16.0, 16.0)
+                drawer.rectangle(
+                    Vector2(
+                        width / 2.0,
+                        height / 2.0
+                    ),
+                    16.0,
+                    16.0
+                )
 
                 if (right.getValue())
                     player.goInDirection(Directions.RIGHT, frameTime)
@@ -122,6 +139,7 @@ fun main() {
 
                 // render
                 renderer.drawScene(player.scene)
+                println(player.getClosestNPC()?.name)
             }
             scene.save()
         }
