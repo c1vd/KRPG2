@@ -11,7 +11,6 @@ import org.openrndr.*
 import org.openrndr.color.ColorRGBa
 import org.openrndr.math.Vector2
 import engine.other.Directions
-import engine.other.EnhancedBoolean
 import engine.other.MessageColors
 
 
@@ -31,10 +30,10 @@ fun main() {
         }
         program {
             println("[INFO] KRPG2 Started".setColor(MessageColors.INFO))
-            val right = EnhancedBoolean(false)
-            val left = EnhancedBoolean(false)
-            val up = EnhancedBoolean(false)
-            val down = EnhancedBoolean(false)
+            var right = false
+            var left = false
+            var up = false
+            var down = false
 
             val defaultPlayerX = 0.0
             val defaultPlayerY = 0.0
@@ -52,29 +51,29 @@ fun main() {
             renderer.setTextColor(ColorRGBa.WHITE)
             var begin = 0.0
             keyboard.setKeyDown(KEY_ARROW_RIGHT) {
-                right.setTrue()
+                right = true
             }
             keyboard.setKeyDown(KEY_ARROW_LEFT) {
-                left.setTrue()
+                left = true
             }
             keyboard.setKeyDown(KEY_ARROW_UP) {
-                up.setTrue()
+                up = true
             }
             keyboard.setKeyDown(KEY_ARROW_DOWN) {
-                down.setTrue()
+                down = true
             }
 
             keyboard.setKeyUp(KEY_ARROW_RIGHT) {
-                right.setFalse()
+                right = false
             }
             keyboard.setKeyUp(KEY_ARROW_LEFT) {
-                left.setFalse()
+                left = false
             }
             keyboard.setKeyUp(KEY_ARROW_UP) {
-                up.setFalse()
+                up = false
             }
             keyboard.setKeyUp(KEY_ARROW_DOWN) {
-                down.setFalse()
+                down = false
             }
 
             mouse.buttonDown.listen {
@@ -121,16 +120,16 @@ fun main() {
                     16.0
                 )
 
-                if (right.getValue())
+                if (right)
                     player.goInDirection(Directions.RIGHT, frameTime)
 
-                if (left.getValue())
+                if (left)
                     player.goInDirection(Directions.LEFT, frameTime)
 
-                if (up.getValue())
+                if (up)
                     player.goInDirection(Directions.UP, frameTime)
 
-                if (down.getValue())
+                if (down)
                     player.goInDirection(Directions.DOWN, frameTime)
 
 

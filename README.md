@@ -55,8 +55,8 @@
 
 ### Костыли
 
-- EnhancedBoolean (Boolean как полноценный класс)
-- IntCoordinates (координаты в целых числах, так как Vector2 состоит из Double)
+- EnhancedBoolean (Boolean как полноценный класс) (убран)
+- IntCoordinates (координаты в целых числах, так как Vector2 состоит из Double) (убран)
 
 ### Цели (если есть галочка - выполнены):
 

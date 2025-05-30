@@ -11,12 +11,12 @@ import engine.message.Message
 import org.openrndr.color.ColorRGBa
 import org.openrndr.draw.Drawer
 import org.openrndr.math.Vector2
-import engine.other.IntCoordinates
 import engine.other.blockSize
 import engine.other.renderDistance
 import engine.scene.BossfightScene
 import engine.scene.DefaultScene
 import engine.scene.Scene
+import org.openrndr.math.IntVector2
 
 class Draw(private val drawer: Drawer, private val camera: Camera) {
     fun clearScreen(color: ColorRGBa = ColorRGBa.BLACK) {
@@ -78,7 +78,7 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
     }
 
     private fun drawBackgrounds(
-        coordinatesToRender: List<IntCoordinates>,
+        coordinatesToRender: List<IntVector2>,
         scene: Scene
     ) {
         for ((x, y) in coordinatesToRender) {
@@ -91,7 +91,7 @@ class Draw(private val drawer: Drawer, private val camera: Camera) {
     }
 
     private fun drawBlocks(
-        coordinatesToRender: List<IntCoordinates>,
+        coordinatesToRender: List<IntVector2>,
         scene: Scene
     ) {
         for ((x, y) in coordinatesToRender) {
